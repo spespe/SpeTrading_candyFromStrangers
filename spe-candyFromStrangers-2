@@ -66,6 +66,22 @@ int OffsetVertical = 20;
 color LabelColor = White;
 int lastDeletedOrderTicket = -1;
 
+bool checkTradeClosedCurrent() {
+   int startAt = lastHistoryPosChecked-10;
+   if(startAt < 0) {
+      startAt = 0;
+   }
+
+   for(int i=startAt;i<OrdersHistoryTotal();i++) {
+      if(OrderSelect(i,SELECT_BY_POS,MODE_HISTORY)==true && OrderMagicNumber() == MagicNumber && OrderSymbol() == Symbol()) {
+         if((OrderType() == OP_BUY || OrderType() == OP_SELL) && OrderCloseTime() >= Time[0]) {
+            return(true);
+         }
+      }
+   }
+
+   return(false);
+}
 
 
 double gbTrueRange(int period, int index) {
