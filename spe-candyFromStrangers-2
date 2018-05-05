@@ -1,0 +1,67 @@
+#Pietro Speri - 05-04-2018
+
+
+extern string __s2 = "-----  SL/PT Parameters  ----------------------";
+extern double MinimumSLPT = 30;
+extern double MaximumSLPT = 300;
+
+extern string __s6 = "-----  Money Management -----------";
+extern bool UseMoneyManagement = false;
+extern double Lots = 0.1;
+extern int LotsDecimals = 2;
+extern double RiskInPercent = 2.0;
+extern double MaximumLots = 0.5;
+extern bool UseFixedMoney = false;
+extern double RiskInMoney = 100.0;
+
+extern string __s7 = "-----  Settings  ----------------";
+extern int MaxTradesPerDay = 0; // 0 means unlimited
+extern bool LimitSignalsToRange = false;
+extern string TimeRangeFrom = "08:00";
+extern string TimeRangeTo = "16:00";
+extern bool ExitAtEndOfRange = false;
+extern bool ExitAtEndOfDay = false;
+extern string ExitTimeEOD = "00:00";
+extern bool ExitOnFriday = true;
+extern string ExitTimeOnFriday = "00:00";
+
+extern bool TradeLong = true;
+extern bool TradeShort = true;
+
+
+extern string __s8 = "-----  Trading Date Parameters  ---------------";
+extern bool TradeSunday = true;
+extern bool TradeMonday = true;
+extern bool TradeTuesday = true;
+extern bool TradeWednesday = true;
+extern bool TradeThursday = true;
+extern bool TradeFriday = true;
+extern bool TradeSaturday = true;
+
+extern string __s9 = "-----  Other Parameters  ----------------------";
+extern int MaxSlippage = 3;
+extern string CustomComment = "Strategy 2.127";
+extern int MagicNumber = 12345;
+extern bool EmailNotificationOnTrade = false;
+extern bool DisplayInfoPanel = true;
+
+//Hidden
+int MinDistanceOfStopFromPrice = 5.0;
+double gPointPow = 0;
+double gPointCoef = 0;
+double gbSpread = 3.0;
+double brokerStopDifference = 0;
+string eaStopDifference = "";
+double eaStopDifferenceNumber = 0;
+int lastHistoryPosChecked = 0;
+int lastHistoryPosCheckedNT = 0;
+string currentTime = "";
+string lastTime = "";
+bool tradingRangeReverted = false;
+string sqLastPeriod;
+bool sqIsBarOpen;
+int LabelCorner = 1;
+int OffsetHorizontal = 5;
+int OffsetVertical = 20;
+color LabelColor = White;
+int lastDeletedOrderTicket = -1;
