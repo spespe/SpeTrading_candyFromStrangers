@@ -65,3 +65,22 @@ int OffsetHorizontal = 5;
 int OffsetVertical = 20;
 color LabelColor = White;
 int lastDeletedOrderTicket = -1;
+
+
+
+double gbTrueRange(int period, int index) {
+   int period1 = period + index-1;
+   int period2 = period + index;
+   return (MathMax(High[period1], Close[period2]) - MathMin(Low[period1], Close[period2]));
+}
+
+double gbBarRange(int period, int index) {
+   int period2 = period + index-1;
+   return (MathAbs(High[period2] - Low[period2]));
+}
+
+
+//Custom start method
+bool customStart() {
+   return(true);
+}
