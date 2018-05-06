@@ -100,3 +100,15 @@ double gbBarRange(int period, int index) {
 bool customStart() {
    return(true);
 }
+
+
+//Risk perc method
+double getRiskPerc(double slSize) {
+   if(RiskInPercent <0 ) {
+      Log("Incorrect risk size");
+      return(0);
+   }
+
+   double riskPerTrade = (AccountBalance() *  (RiskInPercent / 100.0));
+   return(computeMM(riskPerTrade, slSize)); // to be created
+}
