@@ -101,6 +101,46 @@ bool customStart() {
    return(true);
 }
 
+double computeMM(double riskPerTrade, double slSize) {
+   if(slSize <= 0) {
+      Log("Incorrect StopLossPips size, it must be above 0");
+      return(0);
+   }
+
+   // adjust money management for non-US currencies
+   double CurrencyAdjuster=1;
+   if (MarketInfo(Symbol(),MODE_TICKSIZE)!=0) CurrencyAdjuster=MarketInfo(Symbol(),MODE_TICKVALUE) * (MarketInfo(Symbol(),MODE_POINT) / MarketInfo(Symbol(),MODE_TICKSIZE));
+
+   double lotMM1 = NormalizeDouble(riskPerTrade / CurrencyAdjuster / (slSize * 10.0), LotsDecimals);
+   double lotMM;
+   double lotStep = MarketInfo(Symbol(), MODE_LOTSTEP);
+   if(MathMod(lotMM*100, lotStep*100) > 0) {
+      lotMM = lotMM1 - MathMod(lotMM1, lotStep);
+   } else {
+      lotMM = lotMM1;
+   }
+
+   lotMM = NormalizeDouble( lotMM, LotsDecimals);
+
+   if(MarketInfo(Symbol(), MODE_LOTSIZE)==10000.0) lotMM=lotMM*10.0 ;
+   lotMM=NormalizeDouble(lotMM,LotsDecimals);
+
+   //Log("Computing lots, risk: ", riskPerTrade, ", lotMM1: ", lotMM1, ", lotStep: ", lotStep, ", lots: ", lotMM);
+   double Smallest_Lot = MarketInfo(Symbol(), MODE_MINLOT);
+   double Largest_Lot = MarketInfo(Symbol(), MODE_MAXLOT);
+
+   if (lotMM < Smallest_Lot) lotMM = Smallest_Lot;
+   if (lotMM > Largest_Lot) lotMM = Largest_Lot;
+
+   if(lotMM > MaximumLots) {
+      lotMM = MaximumLots;
+   }
+
+   //Log("SL size: ", slSize, ", LotMM: ", lotMM);
+
+   return (lotMM);
+}
+
 
 //Risk perc method
 double getRiskPerc(double slSize) {
