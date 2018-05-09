@@ -193,3 +193,37 @@ bool ShortTermRSI_Above() {
 bool ShortTermRSI_Below() {
    return (iRSI(NULL,0,20,PRICE_CLOSE,1) < 50) ;
 }
+
+
+bool LongTermStoch_Above() {
+   return (iStochastic(NULL,0, 40, 1, 3, MODE_SMA, 0, 1, 1) > 50) ;
+}
+
+bool LongTermStoch_Below() {
+   return (iStochastic(NULL,0, 40, 1, 3, MODE_SMA, 0, 1, 1) < 50) ;
+}
+
+bool ShortTermStoch_Above() {
+   return (iStochastic(NULL,0, 20, 1, 3, MODE_SMA, 0, 1, 1) > 50) ;
+}
+
+bool ShortTermStoch_Below() {
+   return (iStochastic(NULL,0, 20, 1, 3, MODE_SMA, 0, 1, 1) < 50) ;
+}
+
+bool LongTermCCI_Above() {
+   return (iCCI(NULL,0,40,PRICE_TYPICAL,1) > 0) ;
+}
+
+bool LongTermCCI_Below() {
+   return (iCCI(NULL,0,40,PRICE_TYPICAL,1) < 0) ;
+}
+
+bool ShortTermCCI_Above() {
+   return (iCCI(NULL,0,20,PRICE_TYPICAL,1) > 0) ;
+}
+
+bool ShortTermCCI_Below() {
+   return (iCCI(NULL,0,20,PRICE_TYPICAL,1) < 0) ;
+}
+
