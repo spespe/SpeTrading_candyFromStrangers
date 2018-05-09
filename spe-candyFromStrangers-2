@@ -227,3 +227,24 @@ bool ShortTermCCI_Below() {
    return (iCCI(NULL,0,20,PRICE_TYPICAL,1) < 0) ;
 }
 
+bool ruleVolumeAboveAvg() {
+   return (Volume[1] > iCustom(NULL,0, "AvgVolume", 50, 1, 1)) ;
+}
+
+bool ruleVolumeBelowAvg() {
+   return (Volume[1] < iCustom(NULL,0, "AvgVolume", 50, 1, 1)) ;
+}
+
+//Candle patterns
+bool BearishEngulfing(int s) {
+   double O = Open[s];
+   double O1 = Open[s+1];
+   double C = Close[s];
+   double C1 = Close[s+1];
+
+   if ((C1>O1)&&(O>C)&&(O>=C1)&&(O1>=C)&&((O-C)>(C1-O1))) {
+      return(true);
+   }
+
+   return(false);
+}
