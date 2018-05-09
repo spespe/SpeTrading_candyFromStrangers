@@ -152,3 +152,44 @@ double getRiskPerc(double slSize) {
    double riskPerTrade = (AccountBalance() *  (RiskInPercent / 100.0));
    return(computeMM(riskPerTrade, slSize)); // to be created
 }
+
+//Rules methods
+bool CloseAboveBB() {
+   return (Close[1] > iBands(NULL,0, 20, 2, 0, PRICE_CLOSE, MODE_UPPER, 1)) ;
+}
+
+bool CloseBelowBB() {
+   return (Close[1] < iBands(NULL,0, 20, 2, 0, PRICE_CLOSE, MODE_LOWER, 1)) ;
+}
+
+bool CloseAbovePSAR() {
+   return (Close[1] > iSAR(NULL,0, 0.02, 0.2, 1)) ;
+}
+
+bool CloseBelowPSAR() {
+   return (Close[1] < iSAR(NULL,0, 0.02, 0.2, 1)) ;
+}
+
+bool MACD_Above() {
+   return (iMACD(NULL,0, 12, 26, 9, PRICE_CLOSE, MODE_MAIN, 1) > 0) ;
+}
+
+bool MACD_Below() {
+   return (iMACD(NULL,0, 12, 26, 9, PRICE_CLOSE, MODE_MAIN, 1) < 0) ;
+}
+
+bool LongTermRSI_Above() {
+   return (iRSI(NULL,0,40,PRICE_CLOSE,1) > 50) ;
+}
+
+bool LongTermRSI_Below() {
+   return (iRSI(NULL,0,40,PRICE_CLOSE,1) < 50) ;
+}
+
+bool ShortTermRSI_Above() {
+   return (iRSI(NULL,0,20,PRICE_CLOSE,1) > 50) ;
+}
+
+bool ShortTermRSI_Below() {
+   return (iRSI(NULL,0,20,PRICE_CLOSE,1) < 50) ;
+}
