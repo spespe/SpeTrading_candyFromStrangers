@@ -248,3 +248,44 @@ bool BearishEngulfing(int s) {
 
    return(false);
 }
+
+bool BullishEngulfing(int shift) {
+   double O = Open[shift];
+   double O1 = Open[shift+1];
+   double C = Close[shift];
+   double C1 = Close[shift+1];
+
+   if ((O1>C1)&&(C>O)&&(C>=O1)&&(C1>=O)&&((C-O)>(O1-C1))) {
+      return(true);
+   }
+
+   return(false);
+}
+
+bool DrkClCov(int shift) {
+   double L = Low[shift];
+   double H = High[shift];
+
+   double O = Open[shift];
+   double O1 = Open[shift+1];
+   double C = Close[shift];
+   double C1 = Close[shift+1];
+   double CL = H-L;
+
+   double OC_HL;
+   if((H - L) != 0) {
+      OC_HL = (O-C)/(H-L);
+   } else {
+      OC_HL = 0;
+   }
+
+   double Piercing_Line_Ratio = 0.5;
+   double Piercing_Candle_Length = 10;
+
+   if ((C1>O1)&&(((C1+O1)/2)>C)&&(O>C)&&(C>O1)&&(OC_HL>Piercing_Line_Ratio)&&((CL>=Piercing_Candle_Length*gPointCoef))) {
+      return(true);
+   }
+
+   return(false);
+}
+
