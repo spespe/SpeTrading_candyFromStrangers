@@ -289,3 +289,55 @@ bool DrkClCov(int shift) {
    return(false);
 }
 
+bool Doji(int shift) {
+   if(MathAbs(Open[shift] - Close[shift])*gPointPow < 0.6) {
+      return(true);
+   }
+   return(false);
+}
+
+bool Hammer(int shift) {
+   double H = High[shift];
+   double L = Low[shift];
+   double L1 = Low[shift+1];
+   double L2 = Low[shift+2];
+   double L3 = Low[shift+3];
+
+   double O = Open[shift];
+   double C = Close[shift];
+   double CL = H-L;
+
+   double BodyLow, BodyHigh;
+   double Candle_WickBody_Percent = 0.9;
+   double CandleLength = 12;
+
+   if (O > C) {
+      BodyHigh = O;
+      BodyLow = C;
+   } else {
+      BodyHigh = C;
+      BodyLow = O;
+   }
+
+   double LW = BodyLow-L;
+   double UW = H-BodyHigh;
+   double BLa = MathAbs(O-C);
+   double BL90 = BLa*Candle_WickBody_Percent;
+
+   double pipValue = gPointCoef;
+
+   if ((L<=L1)&&(L<L2)&&(L<L3))  {
+      if (((LW/2)>UW)&&(LW>BL90)&&(CL>=(CandleLength*pipValue))&&(O!=C)&&((LW/3)<=UW)&&((LW/4)<=UW)/*&&(H<H1)&&(H<H2)*/)  {
+         return(true);
+      }
+      if (((LW/3)>UW)&&(LW>BL90)&&(CL>=(CandleLength*pipValue))&&(O!=C)&&((LW/4)<=UW)/*&&(H<H1)&&(H<H2)*/)  {
+         return(true);
+      }
+      if (((LW/4)>UW)&&(LW>BL90)&&(CL>=(CandleLength*pipValue))&&(O!=C)/*&&(H<H1)&&(H<H2)*/)  {
+         return(true);
+      }
+   }
+
+   return(false);
+}
+
