@@ -341,3 +341,31 @@ bool Hammer(int shift) {
    return(false);
 }
 
+bool PiercLine(int shift) {
+   double L = Low[shift];
+   double H = High[shift];
+
+   double O = Open[shift];
+   double O1 = Open[shift+1];
+   double C = Close[shift];
+   double C1 = Close[shift+1];
+   double CL = H-L;
+
+   double CO_HL;
+   if((H - L) != 0) {
+      CO_HL = (C-O)/(H-L);
+   } else {
+      CO_HL = 0;
+   }
+
+   double PiercLineRatio = 0.5;
+   double PiercCandleLength = 10;
+
+   if ((C1<O1)&&(((O1+C1)/2)<C)&&(O<C) && (CO_HL>PiercLineRatio)&&(CL>=(PiercCandleLength*gPointCoef))) {
+      return(true);
+   }
+
+   return(false);
+}
+
+
