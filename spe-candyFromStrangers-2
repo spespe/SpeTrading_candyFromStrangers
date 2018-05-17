@@ -413,4 +413,15 @@ bool ShootStar(int shift) {
    return(false);
 }
 
+bool checkRange() {
+   if(tradingRangeReverted == false && (TimeCurrent() < TimeStringToDateTime(TimeRangeFrom) || TimeCurrent() > TimeStringToDateTime(TimeRangeTo))) {
+      return(false);
+   } else if(tradingRangeReverted == true && (TimeCurrent() > TimeStringToDateTime(TimeRangeTo) && TimeCurrent() < TimeStringToDateTime(TimeRangeFrom))) {
+      return(false);
+   }
+
+   return(true);
+}
+
+
 
