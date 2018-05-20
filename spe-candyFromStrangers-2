@@ -437,4 +437,12 @@ bool isDOWeek(datetime time) {
    return(true);
 }
 
+bool doublesEqualcheck(double n1, double n2) {
+   string s1 = DoubleToStr(n1, Digits);
+   string s2 = DoubleToStr(n2, Digits);
+
+   return (s1 == s2);
+}
+
+
 
