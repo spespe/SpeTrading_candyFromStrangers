@@ -423,5 +423,18 @@ bool checkRange() {
    return(true);
 }
 
+bool isDOWeek(datetime time) {
+   int dow = TimeDayOfWeek(time);
+
+   if(!TradeSunday && dow == 0) { return(false); }
+   if(!TradeMonday && dow == 1) { return(false); }
+   if(!TradeTuesday && dow == 2) { return(false); }
+   if(!TradeWednesday && dow == 3) { return(false); }
+   if(!TradeThursday && dow == 4) { return(false); }
+   if(!TradeFriday && dow == 5) { return(false); }
+   if(!TradeSaturday && dow == 6) { return(false); }
+
+   return(true);
+}
 
 
