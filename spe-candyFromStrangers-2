@@ -445,4 +445,16 @@ bool doublesEqualcheck(double n1, double n2) {
 }
 
 
+double MinMaxSLPTcheck(double slptValue) {
+   double slptMin = MinimumSLPT * gPointCoef;
+
+   if(MinimumSLPT > 0) {
+      slptValue = MathMax(MinimumSLPT * gPointCoef, slptValue);
+   }
+   if(MaximumSLPT > 0) {
+      slptValue = MathMin(MaximumSLPT * gPointCoef, slptValue);
+   }
+
+   return (slptValue);
+}
 
