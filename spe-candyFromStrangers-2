@@ -458,3 +458,24 @@ double MinMaxSLPTcheck(double slptValue) {
    return (slptValue);
 }
 
+string getText() {
+   string text = TimeToStr(TimeCurrent());
+   text = StringConcatenate(text, " New Order Opened\n\n");
+
+   text = StringConcatenate(text, " Order ticket: ", OrderTicket(),"\n");
+
+   switch(OrderType()) {
+      case OP_BUY: text = StringConcatenate(text, " Direction : Buy\n"); break;
+      case OP_SELL: text = StringConcatenate(text, " Direction : Sell\n"); break;
+      case OP_BUYLIMIT: text = StringConcatenate(text, " Direction : Buy Limit\n"); break;
+      case OP_SELLLIMIT: text = StringConcatenate(text, " Direction : Sell Limit\n"); break;
+      case OP_BUYSTOP: text = StringConcatenate(text, " Direction : Buy Stop\n"); break;
+      case OP_SELLSTOP: text = StringConcatenate(text, " Direction : Sell Stop\n"); break;
+   }
+
+   text = StringConcatenate(text, " Open: ", OrderOpenPrice(),"\n");
+
+   text = StringConcatenate(text, " Lot: ", OrderLots(),"\n");
+
+   return(text);
+}
