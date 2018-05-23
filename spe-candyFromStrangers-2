@@ -479,3 +479,20 @@ string getText() {
 
    return(text);
 }
+
+
+string GetTime() {
+   string str = TimeToStr(Time[0], TIME_DATE);
+   int period = Period();
+
+   if(period == PERIOD_H4 || period == PERIOD_H1) {
+      str = str + TimeHour(Time[0]);
+   }
+   if(period == PERIOD_M30 || period == PERIOD_M15 || period == PERIOD_M5 || period == PERIOD_M1) {
+      str = str + " " + TimeToStr(Time[0], TIME_MINUTES);
+   }
+
+   return(str);
+}
+
+
