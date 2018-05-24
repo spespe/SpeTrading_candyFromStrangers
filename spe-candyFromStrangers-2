@@ -541,4 +541,16 @@ int sqTradeAllowed(int MaxWaiting_sec = 30) {
     return(1);
 }
 
+double sqGetPL() {
+   double pl = 0;
+   for (int cc = OrdersTotal() - 1; cc >= 0; cc--) {
+      if (!OrderSelect(cc, SELECT_BY_POS) ) continue;
+      if(OrderType() != OP_BUY && OrderType() != OP_SELL) continue;
+      if(OrderSymbol() != Symbol()) continue;
+      if(OrderMagicNumber() != MagicNumber) continue;
+
+      pl += OrderProfit();
+   }
+   return(pl);
+}
 
