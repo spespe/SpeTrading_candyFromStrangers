@@ -496,3 +496,22 @@ string GetTime() {
 }
 
 
+
+
+double toPip(double value) {
+    return(value * gPointCoef);
+}
+
+
+void TextOpen() {
+   ObjectSetText("lineopl", "Open P/L: "+DoubleToStr(sqGetOpenPLInMoney(), 2), 8, "Tahoma", LabelColor);
+   ObjectSetText("linea", "Account Balance: "+DoubleToStr(AccountBalance(), 2) , 8, "Tahoma", LabelColor);
+}
+
+void TextTot() {
+   ObjectSetText("lineto", "Total profits/losses so far: "+sqGetTotalProfits(500)+"/"+sqGetTotalLosses(500), 8, "Tahoma", LabelColor);
+   ObjectSetText("linetp", "Total P/L so far: "+DoubleToStr(sqGetTotalClosedPLInMoney(5000), 2), 8, "Tahoma", LabelColor);
+}
+
+
+
