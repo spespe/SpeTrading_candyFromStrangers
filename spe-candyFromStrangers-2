@@ -517,6 +517,24 @@ int sqTradeAllowed(int MaxWaiting_sec = 30) {
     if(!TradeAllowed()) {
         int StartWaitingTime = GetTickCount();
         Print("Busy..");
+        while(true) {
+            if(IsStopped()) {
+                Print("Expert terminated");
+                return(-1);
+            }
+            int diff = GetTickCount() - StartWaitingTime;
+            if(diff > MaxWaiting_sec * 1000) {
+                Print("The waiting limit exceeded (" + MaxWaiting_sec + " ???.)!");
+                return(-2);
+            }
+            if(TradeAllowed()) {
+                Print("Trade context has become free!");
+                RefreshRates();
+                return(1);
+            }
+            // breaking condition for loop has not been met
+            Sleep(100);
+          }
     } else {
         return(1);
     }
