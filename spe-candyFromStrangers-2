@@ -559,4 +559,9 @@ datetime TimeToDT(string time) {
    return (StrToTime(date + " " + time));
 }
 
+bool DoublesCheck(double number1,double number2){
+   if(NormalizeDouble(number1-number2,8)==0) return(true);
+   else return(false);
+}
+
 
