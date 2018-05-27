@@ -564,4 +564,11 @@ bool DoublesCheck(double number1,double number2){
    else return(false);
 }
 
+//OnInit method
+  void customInit() {
+}
 
+//Custom start 
+bool customStart() {
+   return(true);
+}
