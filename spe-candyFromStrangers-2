@@ -564,6 +564,21 @@ bool DoublesCheck(double number1,double number2){
    else return(false);
 }
 
+string IntToHex(int intNum)
+  {
+   string hex_string="00000000";
+   int    value, shift=28;
+   for(int i=0; i<8; i++)
+     {
+      value=(intNum>>shift)&0x0F;
+      if(value<10) hex_string=StringSetChar(hex_string, i, value+'0');
+      else         hex_string=StringSetChar(hex_string, i, (value-10)+'A');
+      shift-=4;
+     }
+   return(hex_string);
+  }
+
+
 //OnInit method
   void customInit() {
 }
