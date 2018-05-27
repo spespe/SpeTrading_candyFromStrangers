@@ -554,3 +554,9 @@ double sqGetPL() {
    return(pl);
 }
 
+datetime TimeToDT(string time) {
+   string date = TimeToStr(TimeCurrent(),TIME_DATE);
+   return (StrToTime(date + " " + time));
+}
+
+
