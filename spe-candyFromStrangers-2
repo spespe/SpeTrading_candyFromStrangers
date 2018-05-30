@@ -578,6 +578,38 @@ string IntToHex(int intNum)
    return(hex_string);
   }
 
+int totLoss(int LastOrderNum) {
+   double pl = 0;
+   int count = 0;
+   int losses = 0;
+
+   for(int i=OrdersHistoryTotal(); i>=0; i--) {
+      if(OrderSelect(i,SELECT_BY_POS,MODE_HISTORY)==true && OrderSymbol() == Symbol()) {
+
+         if(OrderMagicNumber() == MagicNumber) {
+            // return the P/L of last order
+            // or return the P/L of last order with given Magic Number
+            count++;
+
+            if(OrderType() == OP_BUY) {
+               pl = (OrderClosePrice() - OrderOpenPrice());
+            } else {
+               pl = (OrderOpenPrice() - OrderClosePrice());
+            }
+
+            if(pl < 0) {
+               losses++;
+            }
+
+            if(count >= LastOrderNum) break;
+         }
+      }
+   }
+
+   return(losses);
+}
+
+  
 
 //OnInit method
   void customInit() {
