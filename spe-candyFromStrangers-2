@@ -578,6 +578,12 @@ string IntToHex(int intNum)
    return(hex_string);
   }
 
+void FTotals() {
+   ObjectSetText("line", "P/L: "+sqGetTotalProfits(500)+"/"+sqGetTotalLosses(500), 8, "Tahoma", LabelColor);
+   ObjectSetText("line", "P/L: "+DoubleToStr(sqGetTotalClosedPLInMoney(5000), 2), 8, "Tahoma", LabelColor);
+}
+
+  
 int totLoss(int LastOrderNum) {
    double pl = 0;
    int count = 0;
