@@ -481,6 +481,19 @@ string getText() {
    return(text);
 }
 
+int getOpenBars(int expBarsPeriod) {
+   datetime opTime = OrderOpenTime();
+
+   int numberOfBars = 0;
+   for(int i=0; i<expBarsPeriod+10; i++) {
+      if(opTime < Time[i]) {
+         numberOfBars++;
+      }
+   }
+
+   return(numberOfBars);
+}
+
 
 string GetTime() {
    string str = TimeToStr(Time[0], TIME_DATE);
