@@ -1,0 +1,200 @@
+
+#property indicator_separate_window
+#property indicator_buffers 8
+#property indicator_color1 SteelBlue
+#property indicator_color2 Goldenrod
+#property indicator_color3 BlueViolet
+#property indicator_color4 YellowGreen
+#property indicator_color5 DeepPink
+#property indicator_color6 OrangeRed
+#property indicator_color7 DarkOliveGreen
+#property indicator_color8 MediumPurple
+
+//---- input parameters
+extern int       IdMain   = 12; // main line
+extern int       IdMulti  = 12; // multi line
+extern int       IdBull   = 0; // bull line 
+extern int       IdBear   = 0; // bear line 
+extern int       IdArray=12; // all sma line
+
+extern int     Pairs=14;
+extern string  Pair1  = "GBPUSD";
+extern string  Pair2  = "EURGBP";
+extern string  Pair3  = "GBPJPY";
+extern string  Pair4  = "USDCHF";
+extern string  Pair5  = "NZDUSD";
+extern string  Pair6  = "AUDJPY";
+extern string  Pair7  = "EURJPY";
+extern string  Pair8  = "EURUSD";
+extern string  Pair9  = "USDJPY";
+extern string  Pair10 = "AUDUSD";
+extern string  Pair11 = "NZDJPY";
+extern string  Pair12 = "GBPCHF";
+extern string  Pair13 = "CHFJPY";
+extern string  Pair14 = "EURCHF";
+
+
+//---- buffers
+double ExtMapBuffer[];
+double ExtMapBuffer1[];
+double ExtMapBuffer2[];
+double ExtMapBuffer3[];
+double ExtMapBuffer4[];
+double ExtMapBuffer5[];
+double ExtMapBuffer6[];
+double ExtMapBuffer7[];
+//+------------------------------------------------------------------+
+//| Custom indicator initialization function                         |
+//+------------------------------------------------------------------+
+int init()
+  {
+   SetIndexStyle(0,DRAW_LINE,0,1);
+   SetIndexBuffer(0,ExtMapBuffer);
+   SetIndexArrow(0,158);
+//---
+   SetIndexStyle(1,DRAW_LINE,0,1);
+   SetIndexBuffer(1,ExtMapBuffer1);
+   SetIndexArrow(1,158);
+//---
+   SetIndexStyle(2,DRAW_LINE,0,2);
+   SetIndexBuffer(2,ExtMapBuffer2);
+   SetIndexArrow(2,158);
+//---
+   SetIndexStyle(3,DRAW_LINE,0,1);
+   SetIndexBuffer(3,ExtMapBuffer3);
+//---
+   SetIndexStyle(4,DRAW_LINE,0,1);
+   SetIndexBuffer(4,ExtMapBuffer4);
+//---
+   SetIndexStyle(5,DRAW_LINE,0,2);
+   SetIndexBuffer(5,ExtMapBuffer5);
+   SetIndexArrow(5,158);
+//---
+   SetIndexStyle(6,DRAW_LINE,0,1);
+   SetIndexBuffer(6,ExtMapBuffer6);
+   SetIndexArrow(3,158);
+//---
+   SetIndexStyle(7,DRAW_LINE,0,1);
+   SetIndexBuffer(7,ExtMapBuffer7);
+
+   IndicatorShortName("Market Way Multi");
+//---
+   SetIndexLabel(0,"Multi Line");
+   SetIndexLabel(1,"Multi SMA Line");
+   SetIndexLabel(2,"Main Line");
+   SetIndexLabel(3,"Bull Accumulation");
+   SetIndexLabel(4,"Bear Accumulation");
+   SetIndexLabel(5,"Main SMA Line");
+   SetIndexLabel(6,"Bull SMA Line");
+   SetIndexLabel(7,"Bear SMA Line");
+//----
+   return(0);
+  }
+//+------------------------------------------------------------------+
+//| Custom indicator deinitialization function                       |
+//+------------------------------------------------------------------+
+int deinit()
+  {
+//----
+
+//----
+   return(0);
+  }
+//+------------------------------------------------------------------+
+//| Custom indicator iteration function                              |
+//+------------------------------------------------------------------+
+int start()
+  {
+   double   bull,bear,faster,fast,main,mainmulti,mc,mo;
+//----  
+   int counted_bars=IndicatorCounted();
+   if(counted_bars<0) return(-1);
+   if(counted_bars>0) counted_bars--;
+   int limit=Bars-counted_bars;
+   if(counted_bars==0) limit-=1+MathMax(MathMax(IdBull,IdBear),MathMax(IdMain,IdMulti));
+   int i=limit;
+
+   while(i>=0)
+     {
+      main=0;
+      for(int m=0;m<IdMain;m++)
+        {
+         main=main+(Close[i+m]-Open[i+m]); //сумма разницы открыти¤ и закрыти¤ за IdMain период 
+        }
+      ExtMapBuffer2[i]=NormalizeDouble(main/MarketInfo(Symbol(),MODE_POINT),Digits);
+
+      bull=0;
+      for(int bu=0;bu<IdBull;bu++)
+        {
+         if(Close[i+bu]-Open[i+bu]>=0)
+            bull=bull+(Close[i+bu]-Open[i+bu]);
+        }
+      ExtMapBuffer3[i]=NormalizeDouble(bull/MarketInfo(Symbol(),MODE_POINT),Digits);
+      bear=0;
+      for(int be=0;be<IdBear;be++)
+        {
+         if(Close[i+be]-Open[i+be]<=0)
+            bear=bear+(Close[i+be]-Open[i+be]);
+        }
+      ExtMapBuffer4[i]=NormalizeDouble(bear/MarketInfo(Symbol(),MODE_POINT),Digits);
+
+
+      mainmulti=0;
+      for(int mu=0;mu<IdMulti;mu++)
+        {
+         mainmulti=mainmulti+((multiclose(Pair1,0,i+mu)-multiopen(Pair1,0,i+mu))+
+                              (multiclose(Pair2,0,i+mu)-multiopen(Pair2,0,i+mu))+
+                              (multiclose(Pair3,0,i+mu)-multiopen(Pair3,0,i+mu))+
+                              (multiclose(Pair4,0,i+mu)-multiopen(Pair4,0,i+mu))+
+                              (multiclose(Pair5,0,i+mu)-multiopen(Pair5,0,i+mu))+
+                              (multiclose(Pair6,0,i+mu)-multiopen(Pair6,0,i+mu))+
+                              (multiclose(Pair7,0,i+mu)-multiopen(Pair7,0,i+mu))+
+                              (multiclose(Pair8,0,i+mu)-multiopen(Pair8,0,i+mu))+
+                              (multiclose(Pair9,0,i+mu)-multiopen(Pair9,0,i+mu))+
+                              (multiclose(Pair10,0,i+mu)-multiopen(Pair10,0,i+mu))+
+                              (multiclose(Pair11,0,i+mu)-multiopen(Pair11,0,i+mu))+
+                              (multiclose(Pair12,0,i+mu)-multiopen(Pair12,0,i+mu))+
+                              (multiclose(Pair13,0,i+mu)-multiopen(Pair13,0,i+mu))+
+                              (multiclose(Pair14,0,i+mu)-multiopen(Pair14,0,i+mu))
+                              );
+        }
+      ExtMapBuffer[i]=NormalizeDouble(mainmulti/Pairs,Digits);
+      i--; 
+     }
+//----------------------------------------------------- SMA 
+   for(i=0; i<limit; i++)
+      ExtMapBuffer5[i]=NormalizeDouble(iMAOnArray(ExtMapBuffer2,0,IdArray,0,MODE_SMA,i),Digits);
+
+
+   for(i=0; i<limit; i++)
+      ExtMapBuffer6[i]=NormalizeDouble(iMAOnArray(ExtMapBuffer3,0,IdArray,0,MODE_SMA,i),Digits);
+
+   for(i=0; i<limit; i++)
+      ExtMapBuffer7[i]=NormalizeDouble(iMAOnArray(ExtMapBuffer4,0,IdArray,0,MODE_SMA,i),Digits);
+
+   for(i=0; i<limit; i++)
+      ExtMapBuffer1[i]=NormalizeDouble(iMAOnArray(ExtMapBuffer,0,IdArray,0,MODE_SMA,i),Digits);
+
+//----
+   return(0);
+  }
+//+------------------------------------------------------------------+
+
+double multiclose(string c,int tf,int ni)
+  {
+   if(StringLen(c)<6) return(0);
+   RefreshRates();
+   double   cclose=iClose(c,tf,ni)/MarketInfo(c,MODE_POINT);
+   return(cclose);
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double multiopen(string o,int tf,int ni)
+  {
+   if(StringLen(o)<6) return(0);
+   RefreshRates();
+   double   oopen=iOpen(o,tf,ni)/MarketInfo(o,MODE_POINT);
+   return(oopen);
+  }
+//+------------------------------------------------------------------+
