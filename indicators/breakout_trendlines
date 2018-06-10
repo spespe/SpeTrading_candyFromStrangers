@@ -484,4 +484,113 @@ int start()
    return(0);
   }
   
+  
+void showInfo(int total) {
+   deleteIndLabels();
+   ArrayFree(nameLabels);
+   ArrayFree(priceLabels);
+   ArrayResize(nameLabels, total);
+   ArrayResize(priceLabels, total);
+   int sy = (ChartGetInteger(0, CHART_SHOW_OHLC)) ? 50 : 34;
+   int dy = 16;
+   color nameColor, priceColor;
+   
+   nameColor = (color)(ChartGetInteger(0, CHART_COLOR_BACKGROUND)^0xFFFFFF);
+   priceColor = (color)(nameColor^0x202020);
+   header[0].Create(0, labelPrefix+"Total", 0, 10, sy);
+   header[0].Description("Total");
+   header[0].Color(nameColor);
+   header[0].FontSize(8);
+   header[1].Create(0, labelPrefix+"Qty", 0, 120, sy);
+   header[1].Description(IntegerToString(total));
+   header[1].Color(priceColor);
+   header[1].FontSize(8);
+   sy += 20;
+   for ( int i = 0; i < total; i++ ) {
+      nameLabels[i].Create(0, labelPrefix+"Name"+IntegerToString(i), 0, 10, sy+dy*i);
+      nameLabels[i].Description(lines[i].name);
+      nameLabels[i].Color(nameColor);
+      nameLabels[i].FontSize(8);
+      priceLabels[i].Create(0, labelPrefix+"Price"+IntegerToString(i), 0, 120, sy+dy*i);
+      priceLabels[i].Description(DoubleToString(lines[i].curPrice, _Digits+1));
+      priceLabels[i].Color(priceColor);
+      priceLabels[i].FontSize(8);
+   }
+   
+   ChartRedraw();
+
+}
+
+int OnCalculate(const int rates_total,
+                const int prev_calculated,
+                const datetime &time[],
+                const double &open[],
+                const double &high[],
+                const double &low[],
+                const double &close[],
+                const long &tick_volume[],
+                const long &volume[],
+                const int &spread[])
+{
+   int lastBar = rates_total - 1;
+   if ( prev_calculated != rates_total ) {
+      checkTrendLines(time[lastBar]);
+   }
+   int size = ArraySize(lines);
+      
+   for ( int i = 0; i < size; i++ ) {
+      int prevBar = lastBar - 1;
+      double price = lines[i].curPrice;
+         
+      if ( (MathMin(close[prevBar], open[lastBar]) < price && close[lastBar] >= price) ||
+         (MathMax(close[prevBar], open[lastBar]) > price && close[lastBar] <= price) )
+      {
+         lines[i].crossing = true;
+         if ( InpShowInfo ) {
+            color lineColor = (color)ObjectGetInteger(0, lines[i].name, OBJPROP_COLOR);
+            nameLabels[i].Color(lineColor);
+            priceLabels[i].Color(lineColor);
+         }
+      }
+   }
+   return(rates_total);
+}
+
+void OnTimer() {
+   if ( InpSignalMode == NO_SIG ) {
+      return;
+   }
+   int size = ArraySize(lines);
+   
+   for ( int i = 0; i < size; i++ ) {
+      if ( lines[i].crossing && lines[i].counter < signals ) {
+         if ( InpSignalMode == ONLY_SOUND ) {
+            PlaySound(fileName);
+         } else {
+            Alert("Price crossed TrendLine named ", lines[i].name, " at ", DoubleToString(lines[i].curPrice, _Digits+1));
+         }
+         lines[i].counter += 1;
+      }
+   }
+}
+
+void OnChartEvent(const int id,
+                  const long &lparam,
+                  const double &dparam,
+                  const string &sparam)
+{
+   if ( id == CHARTEVENT_OBJECT_CHANGE || id == CHARTEVENT_OBJECT_DRAG ||
+      (id == CHARTEVENT_OBJECT_DELETE && StringSubstr(sparam, 0, prefixLen) != labelPrefix) ) 
+   {
+      updateInfo();
+   }
+   if ( updateBtn.State() ) {
+      updateBtn.State(false);
+      updateInfo();
+   }
+}
+
+//+--------------------------------- END -------------------------------------+
+
+  
 //+------------------------------------------------------------------+
