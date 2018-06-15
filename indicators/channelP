@@ -1,0 +1,96 @@
+#property indicator_chart_window
+#property indicator_buffers 3
+#property indicator_plots   3
+#property indicator_type1   DRAW_LINE
+#property indicator_type2   DRAW_LINE
+#property indicator_type3   DRAW_LINE
+#property indicator_color1  Magenta
+#property indicator_color2  Magenta
+#property indicator_color3  Magenta
+#property indicator_width1  2
+#property indicator_width2  2
+#property indicator_width3  1
+#property indicator_label1  "Channel upper"
+#property indicator_label2  "Channel lower"
+#property indicator_label3  "Channel median"
+input int InpChannelPeriod=10; // Period
+double    ExtHighBuffer[];
+double    ExtLowBuffer[];
+double    ExtMiddBuffer[];
+
+//OnInit
+void OnInit()
+  {
+   SetIndexBuffer(0,ExtHighBuffer,INDICATOR_DATA);
+   SetIndexBuffer(1,ExtLowBuffer,INDICATOR_DATA);
+   SetIndexBuffer(2,ExtMiddBuffer,INDICATOR_DATA);
+
+   IndicatorSetInteger(INDICATOR_DIGITS,_Digits-1);
+
+   PlotIndexSetInteger(0,PLOT_DRAW_BEGIN,InpChannelPeriod);
+   PlotIndexSetInteger(0,PLOT_SHIFT,1);
+   PlotIndexSetInteger(1,PLOT_SHIFT,1);
+   PlotIndexSetInteger(2,PLOT_SHIFT,1);
+
+   IndicatorSetString(INDICATOR_SHORTNAME,"Price Channel("+string(InpChannelPeriod)+")");
+
+   PlotIndexSetString(0,PLOT_LABEL,"Channel("+string(InpChannelPeriod)+") upper");
+   PlotIndexSetString(1,PLOT_LABEL,"Channel("+string(InpChannelPeriod)+") lower");
+   PlotIndexSetString(2,PLOT_LABEL,"Median("+string(InpChannelPeriod)+")");
+
+   PlotIndexSetDouble(0,PLOT_EMPTY_VALUE,0.0);
+   PlotIndexSetDouble(1,PLOT_EMPTY_VALUE,0.0);
+   PlotIndexSetDouble(2,PLOT_EMPTY_VALUE,0.0);
+  }
+
+//Highest value
+double Highest(const double &array[],int range,int fromIndex)
+  {
+   double res;
+   int i;
+   res=array[fromIndex];
+   for(i=fromIndex;i>fromIndex-range && i>=0;i--)
+     {
+      if(res<array[i]) res=array[i];
+     }
+   return(res);
+  }
+
+//lowest  
+double Lowest(const double &array[],int range,int fromIndex)
+  {
+   double res;
+   int i;
+   res=array[fromIndex];
+   for(i=fromIndex;i>fromIndex-range && i>=0;i--)
+     {
+      if(res>array[i]) res=array[i];
+     }
+   return(res);
+  }
+
+//onCalculate  
+int OnCalculate(const int rates_total,const int prev_calculated,
+                const datetime &Time[],
+                const double &Open[],
+                const double &High[],
+                const double &Low[],
+                const double &Close[],
+                const long &TickVolume[],
+                const long &Volume[],
+                const int &Spread[])
+  {
+   int i,limit;
+   if(rates_total<InpChannelPeriod)
+      return(0);
+   if(prev_calculated==0)
+      limit=InpChannelPeriod;
+   else limit=prev_calculated-1;
+   for(i=limit;i<rates_total;i++)
+     {
+      ExtHighBuffer[i]=Highest(High,InpChannelPeriod,i);
+      ExtLowBuffer[i]=Lowest(Low,InpChannelPeriod,i);
+      ExtMiddBuffer[i]=(ExtHighBuffer[i]+ExtLowBuffer[i])/2.0;;
+     }
+   return(rates_total);
+  }
