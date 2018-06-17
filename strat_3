@@ -103,3 +103,35 @@ void OnTick()
    double Ask = SymbolInfoDouble(_Symbol,SYMBOL_ASK);   
    double Bid = SymbolInfoDouble(_Symbol,SYMBOL_BID);   
 
+   bool Buy_Condition =(mrate[1].close > BBLow[1] && mrate[1].open < BBLow[1] &&  
+                        demaVal[0]>demaVal[1] && demaVal[1]>demaVal[2]);          
+
+   bool Sell_Condition = (mrate[1].close < BBUp[1] && mrate[1].open > BBUp[1] &&  
+                          demaVal[0]<demaVal[1] && demaVal[1]<demaVal[2]);        
+
+   bool Buy_Close=(mrate[1].close<BBUp[1] && mrate[1].open>BBUp[1]);              
+
+   bool Sell_Close=(mrate[1].close>BBLow[1] && mrate[1].open<BBLow[1]);           
+
+   if(Buy_Condition && !PositionSelect(_Symbol))    
+     {                                              
+      LongPositionOpen();                           
+     }
+
+   if(Sell_Condition && !PositionSelect(_Symbol))   
+     {                                              
+      ShortPositionOpen();                          
+     }
+
+   if(Buy_Close && PositionSelect(_Symbol))         
+     {                                              
+      LongPositionClose();
+     }
+
+   if(Sell_Close && PositionSelect(_Symbol))        
+     {                                              
+      ShortPositionClose();
+     }
+
+   return;
+  }
