@@ -190,4 +190,61 @@ void ShortPositionOpen()
       OrderSend(mrequest,mresult);                       
      }
   }
+  
+  //Closing long positions
+void LongPositionClose()
+  {
+   MqlTradeRequest mrequest;                             
+   MqlTradeResult mresult;                               
+   
+   ZeroMemory(mrequest);
+   ZeroMemory(mresult);
+   
+   double Ask = SymbolInfoDouble(_Symbol,SYMBOL_ASK);    
+   double Bid = SymbolInfoDouble(_Symbol,SYMBOL_BID);    
+
+   if(PositionGetInteger(POSITION_TYPE)==POSITION_TYPE_BUY)
+     {
+      mrequest.action = TRADE_ACTION_DEAL;               
+      mrequest.price = NormalizeDouble(Bid,_Digits);     
+      mrequest.sl = 0;                                   
+      mrequest.tp = 0;                                   
+      mrequest.symbol = _Symbol;                         
+      mrequest.volume = Lot;                             
+      mrequest.magic = 0;                                
+      mrequest.type= ORDER_TYPE_SELL;                    
+      mrequest.type_filling = ORDER_FILLING_FOK;         
+      mrequest.deviation=5;                              
+      OrderSend(mrequest,mresult);                       
+     }
+  }
+
+//Closing short positions  
+void ShortPositionClose()
+  {
+   MqlTradeRequest mrequest;                             
+   MqlTradeResult mresult;                               
+   
+   ZeroMemory(mrequest);
+   ZeroMemory(mresult);
+   
+   double Ask = SymbolInfoDouble(_Symbol,SYMBOL_ASK);    
+   double Bid = SymbolInfoDouble(_Symbol,SYMBOL_BID);    
+
+   if(PositionGetInteger(POSITION_TYPE)==POSITION_TYPE_SELL)
+     {
+      mrequest.action = TRADE_ACTION_DEAL;               
+      mrequest.price = NormalizeDouble(Ask,_Digits);     
+      mrequest.sl = 0;                                   
+      mrequest.tp = 0;                                   
+      mrequest.symbol = _Symbol;                         
+      mrequest.volume = Lot;                             
+      mrequest.magic = 0;                                
+      mrequest.type = ORDER_TYPE_BUY;                    
+      mrequest.type_filling = ORDER_FILLING_FOK;         
+      mrequest.deviation=5;                              
+      OrderSend(mrequest,mresult);                       
+     }
+  }
+
 
