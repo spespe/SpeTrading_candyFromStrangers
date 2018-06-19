@@ -25,68 +25,67 @@ int min_rates_total;
 //OnInit
 void OnInit()
   {
-     min_rates_total=int(MPeriod+MathMax(Short,Long));
-        SetIndexBuffer(0,StdDevBuffer,INDICATOR_DATA);
-	   PlotIndexSetInteger(0,PLOT_DRAW_BEGIN,min_rates_total);
-	      PlotIndexSetDouble(0,PLOT_EMPTY_VALUE,EMPTY_VALUE);
-	         SetIndexBuffer(1,ColorBuffer,INDICATOR_COLOR_INDEX);
-		    PlotIndexSetInteger(1,PLOT_DRAW_BEGIN,min_rates_total);
-		       string shortname;
-		          StringConcatenate(shortname,"Change of Volatility( ",MPeriod,", ",Short,", ",Long," )");
-			     IndicatorSetString(INDICATOR_SHORTNAME,shortname);
-			        IndicatorSetInteger(INDICATOR_DIGITS,0);
-				   IndicatorSetInteger(INDICATOR_LEVELS,3);
-				      IndicatorSetDouble(INDICATOR_LEVELVALUE,0,MaxTrendLevel);
-				         IndicatorSetDouble(INDICATOR_LEVELVALUE,1,MiddLeTrendLevel);
-					    IndicatorSetDouble(INDICATOR_LEVELVALUE,2,FlatLevel);
-					       IndicatorSetInteger(INDICATOR_LEVELCOLOR,0,Magenta);
-					          IndicatorSetInteger(INDICATOR_LEVELCOLOR,1,Blue);
-						     IndicatorSetInteger(INDICATOR_LEVELCOLOR,2,Gray);
-						        IndicatorSetInteger(INDICATOR_LEVELSTYLE,0,STYLE_DASHDOTDOT);
-							   IndicatorSetInteger(INDICATOR_LEVELSTYLE,1,STYLE_DASHDOTDOT);
-							      IndicatorSetInteger(INDICATOR_LEVELSTYLE,2,STYLE_DASHDOTDOT);
-							        }
+   min_rates_total=int(MPeriod+MathMax(Short,Long));
+   SetIndexBuffer(0,StdDevBuffer,INDICATOR_DATA);
+   PlotIndexSetInteger(0,PLOT_DRAW_BEGIN,min_rates_total);
+   PlotIndexSetDouble(0,PLOT_EMPTY_VALUE,EMPTY_VALUE);
+   SetIndexBuffer(1,ColorBuffer,INDICATOR_COLOR_INDEX);
+   PlotIndexSetInteger(1,PLOT_DRAW_BEGIN,min_rates_total);
+   string shortname;
+   StringConcatenate(shortname,"Change of Volatility( ",MPeriod,", ",Short,", ",Long," )");
+   IndicatorSetString(INDICATOR_SHORTNAME,shortname);
+   IndicatorSetInteger(INDICATOR_DIGITS,0);
+   IndicatorSetInteger(INDICATOR_LEVELS,3);
+   IndicatorSetDouble(INDICATOR_LEVELVALUE,0,MaxTrendLevel);
+   IndicatorSetDouble(INDICATOR_LEVELVALUE,1,MiddLeTrendLevel);
+   IndicatorSetDouble(INDICATOR_LEVELVALUE,2,FlatLevel);
+   IndicatorSetInteger(INDICATOR_LEVELCOLOR,0,Magenta);
+   IndicatorSetInteger(INDICATOR_LEVELCOLOR,1,Blue);
+   IndicatorSetInteger(INDICATOR_LEVELCOLOR,2,Gray);
+   IndicatorSetInteger(INDICATOR_LEVELSTYLE,0,STYLE_DASHDOTDOT);
+   IndicatorSetInteger(INDICATOR_LEVELSTYLE,1,STYLE_DASHDOTDOT);
+   IndicatorSetInteger(INDICATOR_LEVELSTYLE,2,STYLE_DASHDOTDOT);
+  }
 
-								//OnCalculate
-								int OnCalculate(const int rates_total,    
-								                const int prev_calculated,
-										                const datetime &time[],
-												                const double &open[],
-														                const double &high[],
-																                const double &low[],
-																		                const double &close[],
-																				                const long &tick_volume[],
-																						                const long &volume[],
-																								                const int &spread[])
-																										  {
-																										     if(rates_total<min_rates_total) return(RESET); //To verify that we actually have anough bars
-																										        int first,bar;
-																											   double stdl,stds,smal,smas,momentum;
-																											      if(prev_calculated==0) // checking for the first start of the indicator calculation
-																											            first=0;                   // starting index for calculation of all bars
-																												       else first=prev_calculated-1; // starting index for calculation of new bars
-																												          static CMomentum Mom;
-																													     static CStdDeviation STDL,STDS;
-																													        static CMoving_Average SMAL,SMAS;
+//OnCalculate
+int OnCalculate(const int rates_total,    
+                const int prev_calculated,
+                const datetime &time[],
+                const double &open[],
+                const double &high[],
+                const double &low[],
+                const double &close[],
+                const long &tick_volume[],
+                const long &volume[],
+                const int &spread[])
+  {
+   if(rates_total<min_rates_total) return(RESET); //To verify that we actually have anough bars
+   int first,bar;
+   double stdl,stds,smal,smas,momentum;
+   if(prev_calculated==0) // checking for the first start of the indicator calculation
+      first=0;                   // starting index for calculation of all bars
+   else first=prev_calculated-1; // starting index for calculation of new bars
+   static CMomentum Mom;
+   static CStdDeviation STDL,STDS;
+   static CMoving_Average SMAL,SMAS;
 
-																														   //Looping
-																														      for(bar=first; bar<rates_total && !IsStopped(); bar++)
-																														           {
-																															         momentum=Mom.MomentumSeries(0,prev_calculated,rates_total,MPeriod,close[bar],bar,false);
-																																       momentum/=_Point;
+   //Looping
+   for(bar=first; bar<rates_total && !IsStopped(); bar++)
+     {
+      momentum=Mom.MomentumSeries(0,prev_calculated,rates_total,MPeriod,close[bar],bar,false);
+      momentum/=_Point;
 
-																																             smal=SMAL.SMASeries(MPeriod,prev_calculated,rates_total,Long,momentum,bar,false);
-																																	           stdl=STDL.StdDevSeries(MPeriod,prev_calculated,rates_total,Long,2,momentum,smal,bar,false);
-																																		         smas=SMAS.SMASeries(MPeriod,prev_calculated,rates_total,Short,momentum,bar,false);
-																																			       stds=STDS.StdDevSeries(MPeriod,prev_calculated,rates_total,Short,2,momentum,smas,bar,false);
+      smal=SMAL.SMASeries(MPeriod,prev_calculated,rates_total,Long,momentum,bar,false);
+      stdl=STDL.StdDevSeries(MPeriod,prev_calculated,rates_total,Long,2,momentum,smal,bar,false);
+      smas=SMAS.SMASeries(MPeriod,prev_calculated,rates_total,Short,momentum,bar,false);
+      stds=STDS.StdDevSeries(MPeriod,prev_calculated,rates_total,Short,2,momentum,smas,bar,false);
 
-																																			             if(stdl) StdDevBuffer[bar]=100*stds/stdl;
-																																				           else StdDevBuffer[bar]=0.0;
-																																					         ColorBuffer[bar]=0;
-																																						       if(StdDevBuffer[bar]>MaxTrendLevel) ColorBuffer[bar]=3;
-																																						             else if(StdDevBuffer[bar]>MiddLeTrendLevel) ColorBuffer[bar]=2;
-																																							           else if(StdDevBuffer[bar]>FlatLevel) ColorBuffer[bar]=1;
-																																								        }
-																																									   return(rates_total);
-																																									     }
-
+      if(stdl) StdDevBuffer[bar]=100*stds/stdl;
+      else StdDevBuffer[bar]=0.0;
+      ColorBuffer[bar]=0;
+      if(StdDevBuffer[bar]>MaxTrendLevel) ColorBuffer[bar]=3;
+      else if(StdDevBuffer[bar]>MiddLeTrendLevel) ColorBuffer[bar]=2;
+      else if(StdDevBuffer[bar]>FlatLevel) ColorBuffer[bar]=1;
+     }
+   return(rates_total);
+  }
