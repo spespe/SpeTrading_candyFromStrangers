@@ -1,4 +1,4 @@
-class CMovSeriesTools
+class MSeries
   {
 public:
    void              MALengthCheck(string LengthName,int    ExternLength);
@@ -35,4 +35,61 @@ protected:
                                        );
 
    bool              ArrayResizeErrorPrint(string FunctionsName,int &Size_);
+  };
+
+  
+class MaClass : public MSeries
+  {
+public:
+   double            MASeries(uint begin,               
+                              uint prev_calculated,     
+                              uint rates_total,         
+                              int Length,               
+                              ENUM_MA_METHOD MA_Method, 
+                              double series,            
+                              uint bar,                 
+                              bool set                  
+                              );
+
+   double            SMASeries(uint begin,              
+                               uint prev_calculated,    
+                               uint rates_total,        
+                               int Length,              
+                               double series,           
+                               uint bar,                
+                               bool set                 
+                               );
+
+   double            EMASeries(uint begin,              
+                               uint prev_calculated,    
+                               uint rates_total,        
+                               double Length,           
+                               double series,           
+                               uint bar,                
+                               bool set                 
+                               );
+
+   double            SMMASeries(uint begin,             
+                                uint prev_calculated,   
+                                uint rates_total,       
+                                int Length,             
+                                double series,          
+                                uint bar,               
+                                bool set                
+                                );
+
+   double            LWMASeries(uint begin,             
+                                uint prev_calculated,   
+                                uint rates_total,       
+                                int Length,             
+                                double series,          
+                                uint bar,               
+                                bool set                
+                                );
+
+protected:
+   double            m_SeriesArray[];
+   int               m_Size_,m_count,m_weight;
+   double            m_Moving,m_MOVING,m_Pr;
+   double            m_sum,m_SUM,m_lsum,m_LSUM;
   };
