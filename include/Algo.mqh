@@ -160,3 +160,43 @@ protected:
    bool              m_bhoop1[128],m_bhoop2[11],m_bdata[128];
   };
 
+class CAMA : public MSeries
+  {
+public:
+   double            AMASeries(uint begin,               
+                               uint prev_calculated,     
+                               uint rates_total,         
+                               int Length,               
+                               int Fast_Length,          
+                               int Slow_Length,          
+                               double Rate,              
+                               double series,            
+                               uint bar,                 
+                               bool set                  
+                               );
+protected:
+   double            m_SeriesArray[];
+   double            m_dSeriesArray[];
+   double            m_NOISE,m_noise;
+   double            m_Ama,m_AMA_,m_slowSC,m_fastSC,m_dSC;
+   int               m_Size_1,m_Size_2,m_count;
+  };
+  
+class CParMA : public MSeries
+  {
+public:
+   double            ParMASeries(uint begin,             
+                                 uint prev_calculated,   
+                                 uint rates_total,       
+                                 int Length,             
+                                 double series,          
+                                 uint bar,               
+                                 bool set                
+                                 );
+protected:
+   void              ParMAInit(double Length);
+
+   double            m_SeriesArray[];
+   int               m_Size_,m_count;
+   int               m_sum_x,m_sum_x2,m_sum_x3,m_sum_x4;
+  };
