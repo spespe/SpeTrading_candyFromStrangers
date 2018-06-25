@@ -200,3 +200,56 @@ protected:
    int               m_Size_,m_count;
    int               m_sum_x,m_sum_x2,m_sum_x3,m_sum_x4;
   };
+
+class CT3 : public CSeries
+  {
+public:
+   double            T3Series(uint begin,                
+                              uint prev_calculated,      
+                              uint rates_total,          
+                              int  Din,                  
+                              double Curvature,          
+                              double Length,             
+                              double series,             
+                              uint bar,                  
+                              bool set                   
+                              );
+protected:
+   void              T3Init(uint begin,
+                            int Din,
+                            double Curvature,
+                            double Length,
+                            double series,
+                            uint bar
+                            );
+   double            m_b2,m_b3;
+   double            m_e1,m_e2,m_e3,m_e4,m_e5,m_e6;
+   double            m_E1,m_E2,m_E3,m_E4,m_E5,m_E6;
+   double            m_c1,m_c2,m_c3,m_c4,m_w1,m_w2;
+  };
+
+class CJurX : public MSeries
+  {
+public:
+   double            JurXSeries(uint begin,              
+                                uint prev_calculated,    
+                                uint rates_total,        
+                                int  Din,                
+                                double Length,           
+                                double series,           
+                                uint bar,                
+                                bool set                 
+                                );
+protected:
+   void              JurXInit(uint begin,
+                              int Din,
+                              double Length,
+                              double series,
+                              uint bar
+                              );
+
+   double            m_AB,m_AC;
+   double            m_f1,m_f2,m_f3,m_f4,m_f5;
+   double            m_f6,m_Kg,m_Hg,m_F1,m_F2;
+   double            m_F3,m_F4,m_F5,m_F6,m_w;
+  };
