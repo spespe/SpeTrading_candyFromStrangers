@@ -253,3 +253,49 @@ protected:
    double            m_f6,m_Kg,m_Hg,m_F1,m_F2;
    double            m_F3,m_F4,m_F5,m_F6,m_w;
   };
+  
+  class CCMO : public CSeries
+  {
+public:
+
+   double            VIDYASeries(uint begin,             
+                                 uint prev_calculated,   
+                                 uint rates_total,       
+                                 int CMO_Length,         
+                                 double EMA_Length,
+                                 double series,          
+                                 uint bar,               
+                                 bool set                
+                                 );
+
+   double            CMOSeries(uint begin,               
+                               uint prev_calculated,     
+                               uint rates_total,         
+                               int CMO_Length,           
+                               double series,
+                               uint bar,                 
+                               bool set                  
+                               );
+
+protected:
+   double            m_dSeriesArray[];
+   int               m_Size_,m_count;
+   double            m_UpSum_,m_UpSum,m_DnSum_,m_DnSum,m_Vidya,m_Vidya_;
+   double            m_AbsCMO_,m_AbsCMO,m_series1,m_series1_,m_SmoothFactor;
+  };
+  
+  class CMomentum : public CSeries  {
+public:
+   double            MomentumSeries(uint begin,          
+                                    uint prev_calculated,
+                                    uint rates_total,    
+                                    int Length,          
+                                    double series,       
+                                    uint bar,            
+                                    bool set             
+                                    );
+protected:
+
+   double            m_SeriesArray[];
+   int               m_Size_,m_count;
+  };
