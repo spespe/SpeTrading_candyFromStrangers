@@ -284,6 +284,40 @@ protected:
    double            m_AbsCMO_,m_AbsCMO,m_series1,m_series1_,m_SmoothFactor;
   };
   
+class Momntm : public MSeries
+  {
+public:
+   double            nMomentumSeries(uint begin,          // Bars reliable calculation beginning index
+                                     uint prev_calculated,// Amount of bars in history at previous call
+                                     uint rates_total,    // Amount of history in bars at the current tick
+                                     int Length,          // Smoothing period
+                                     double series,       // Value of the price series calculated for the bar with the 'bar' index
+                                     uint bar,            // Bar index
+                                     bool set             // Direction of arrays indexing
+                                     );
+protected:
+
+   double            m_SeriesArray[];
+   int               m_Size_,m_count;
+  };
+
+class CR : public MSeries
+  {
+public:
+   double            ROCSeries(uint begin,               // Bars reliable calculation beginning index
+                               uint prev_calculated,     // Amount of history in bars at previous tick
+                               uint rates_total,         // Amount of history in bars at the current tick
+                               int Length,               // Smoothing period
+                               double series,            // Value of the price series calculated for the bar with the 'bar' index
+                               uint bar,                 // Bar index
+                               bool set                  // Direction of arrays indexing
+                               );
+protected:
+
+   double            m_SeriesArray[];
+   int               m_Size_,m_count;
+  };
+  
   class CMomentum : public CSeries  {
 public:
    double            MomentumSeries(uint begin,          
