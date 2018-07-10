@@ -287,13 +287,13 @@ protected:
 class Momntm : public MSeries
   {
 public:
-   double            nMomentumSeries(uint begin,          // Bars reliable calculation beginning index
-                                     uint prev_calculated,// Amount of bars in history at previous call
-                                     uint rates_total,    // Amount of history in bars at the current tick
-                                     int Length,          // Smoothing period
-                                     double series,       // Value of the price series calculated for the bar with the 'bar' index
-                                     uint bar,            // Bar index
-                                     bool set             // Direction of arrays indexing
+   double            nMomentumSeries(uint begin,          
+                                     uint prev_calculated,
+                                     uint rates_total,    
+                                     int Length,          
+                                     double series,       
+                                     uint bar,            
+                                     bool set             
                                      );
 protected:
 
@@ -304,13 +304,13 @@ protected:
 class CR : public MSeries
   {
 public:
-   double            ROCSeries(uint begin,               // Bars reliable calculation beginning index
-                               uint prev_calculated,     // Amount of history in bars at previous tick
-                               uint rates_total,         // Amount of history in bars at the current tick
-                               int Length,               // Smoothing period
-                               double series,            // Value of the price series calculated for the bar with the 'bar' index
-                               uint bar,                 // Bar index
-                               bool set                  // Direction of arrays indexing
+   double            ROCSeries(uint begin,               
+                               uint prev_calculated,     
+                               uint rates_total,         
+                               int Length,               
+                               double series,            
+                               uint bar,                 
+                               bool set                  
                                );
 protected:
 
@@ -333,3 +333,23 @@ protected:
    double            m_SeriesArray[];
    int               m_Size_,m_count;
   };
+  
+  class CFL : public CSeries
+  {
+public:
+   double            FATLSeries(uint begin,             
+                                uint prev_calculated,   
+                                uint rates_total,       
+                                double series,          
+                                uint bar,               
+                                bool set                
+                                );
+                     CFATL();
+protected:
+   double            m_SeriesArray[39];
+   int               m_Size_,m_count;
+   double            m_FATL;
+
+   double            m_FATLTable[39];
+  };
+  
