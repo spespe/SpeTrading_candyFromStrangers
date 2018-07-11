@@ -353,6 +353,7 @@ protected:
    double            m_FATLTable[39];
   };
   
+  
   class CSATL : public CSeries
   {
 public:
@@ -370,6 +371,24 @@ protected:
    double            m_SATL;
 
    double            m_SATLTable[65];
+  };
+  class CRFTL : public CMovSeriesTools
+  {
+public:
+   double            RFTLSeries(uint begin,           
+                                uint prev_calculated, 
+                                uint rates_total,     
+                                double series,        
+                                uint bar,             
+                                bool set              
+                                );
+                     CRFTL();
+protected:
+   double            m_SeriesArray[44];
+   int               m_Size_,m_count;
+   double            m_RFTL;
+
+   double            m_RFTLTable[44];
   };
 
   
