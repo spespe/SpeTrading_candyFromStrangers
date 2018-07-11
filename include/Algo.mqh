@@ -353,3 +353,23 @@ protected:
    double            m_FATLTable[39];
   };
   
+  class CSATL : public CSeries
+  {
+public:
+   double            SATLSeries(uint begin,            
+                                uint prev_calculated,  
+                                uint rates_total,      
+                                double series,         
+                                uint bar,              
+                                bool set               
+                                );
+                     CSATL();
+protected:
+   double            m_SeriesArray[65];
+   int               m_Size_,m_count;
+   double            m_SATL;
+
+   double            m_SATLTable[65];
+  };
+
+  
