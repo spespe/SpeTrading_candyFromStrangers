@@ -391,4 +391,21 @@ protected:
    double            m_RFTLTable[44];
   };
 
-  
+  class CRSTL : public CSeries
+  {
+public:
+   double            RSTLSeries(uint begin,           
+                                uint prev_calculated, 
+                                uint rates_total,     
+                                double series,        
+                                uint bar,             
+                                bool set              
+                                );
+                     CRSTL();
+protected:
+   double            m_SeriesArray[99];
+   int               m_Size_,m_count;
+   double            m_RSTL;
+
+   double            m_RSTLTable[99];
+  };
