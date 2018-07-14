@@ -409,3 +409,40 @@ protected:
 
    double            m_RSTLTable[99];
   };
+
+  
+  class CXMA_SM
+  {
+public:
+   enum Smooth_Method
+     {
+      MODE_SMA_,  MODE_EMA_,MODE_SMMA_,  MODE_LWMA_,       MODE_JJMA,        MODE_JurX,        MODE_ParMA,       MODE_T3,          MODE_VIDYA,       MODE_AMA    
+     };
+
+   double            XMASeries(uint begin,                                          uint prev_calculated,                                uint rates_total,                                    Smooth_Method Method,                                int Phase,                                int Length,                                          double series,                                       uint bar,                                            bool set              
+                               );
+
+   int               GetStartBars(Smooth_Method Method,int Length,int Phase);
+   string            GetString_MA_Method(Smooth_Method Method);
+   void              XMAPhaseCheck(string PhaseName,int ExternPhase,Smooth_Method Method);
+   void              XMALengthCheck(string LengthName,int ExternLength);
+   void              XMAInit(Smooth_Method Method);
+                     CXMA(){m_init=false;};
+                    ~CXMA();
+
+protected:
+
+   CMoving_Average *SMA;
+   CMoving_Average *EMA;
+   CMoving_Average *SMMA;
+   CMoving_Average *LWMA;
+   CJJMA            *JJMA;
+   CJurX            *JurX;
+   CParMA           *ParMA;
+   CT3              *T3;
+   CCMO             *VIDYA;
+   CAMA             *AMA;
+
+   bool              m_init;
+   Smooth_Method     m_Method;
+  };
