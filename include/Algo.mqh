@@ -446,3 +446,21 @@ protected:
    bool              m_init;
    Smooth_Method     m_Method;
   };
+
+int StartingBarFind(Smooth_Method Method,int Length,int Phase)
+  {
+   switch(Method)
+     {
+      case MODE_SMA_:  return(Length);
+      case MODE_EMA_:  return(0);
+      case MODE_SMMA_: return(Length+1);
+      case MODE_LWMA_: return(Length);
+      case MODE_JJMA:  return(30);
+      case MODE_JurX:  return(0);
+      case MODE_ParMA: return(Length);
+      case MODE_T3:    return(0);
+      case MODE_VIDYA: return(Phase+2);
+      case MODE_AMA:   return(Length+2);
+     }
+   return(0);
+  }
