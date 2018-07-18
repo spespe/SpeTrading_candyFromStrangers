@@ -464,3 +464,55 @@ int StartingBarFind(Smooth_Method Method,int Length,int Phase)
      }
    return(0);
   }
+  
+  double PSeries(uint applied_price,  // Price constant
+                   uint   bar,          // Index of shift relative to the current bar for a specified number of periods back or forward).
+                   const double &Open[],
+                   const double &Low[],
+                   const double &High[],
+                   const double &Close[]
+                   )
+  {
+   switch(applied_price)
+     {
+      case  PRICE_CLOSE: return(Close[bar]);
+      case  PRICE_OPEN: return(Open [bar]);
+      case  PRICE_HIGH: return(High [bar]);
+      case  PRICE_LOW: return(Low[bar]);
+      case  PRICE_MEDIAN: return((High[bar]+Low[bar])/2.0);
+      case  PRICE_TYPICAL: return((Close[bar]+High[bar]+Low[bar])/3.0);
+      case  PRICE_WEIGHTED: return((2*Close[bar]+High[bar]+Low[bar])/4.0);
+
+      case  8: return((Open[bar] + Close[bar])/2.0);
+      case  9: return((Open[bar] + Close[bar] + High[bar] + Low[bar])/4.0);
+      case 10:
+        {
+         if(Close[bar]>Open[bar]) return(High[bar]);
+         else
+           {
+            if(Close[bar]<Open[bar]) return(Low[bar]);
+            else return(Close[bar]);
+           }
+        }
+      case 11:
+        {
+         if(Close[bar]>Open[bar])return((High[bar]+Close[bar])/2.0);
+         else
+           {
+            if(Close[bar]<Open[bar]) return((Low[bar]+Close[bar])/2.0);
+            else return(Close[bar]);
+           }
+        }
+      case 12:
+        {
+         double res=High[bar]+Low[bar]+Close[bar];
+
+         if(Close[bar]<Open[bar]) res=(res+Low[bar])/2;
+         if(Close[bar]>Open[bar]) res=(res+High[bar])/2;
+         if(Close[bar]==Open[bar]) res=(res+Close[bar])/2;
+         return(((res-Low[bar])+(res-High[bar]))/2);
+        }
+      default: return(Close[bar]);
+     }
+//return(0);
+  }
