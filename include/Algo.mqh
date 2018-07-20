@@ -465,8 +465,8 @@ int StartingBarFind(Smooth_Method Method,int Length,int Phase)
    return(0);
   }
   
-  double PSeries(uint applied_price,  // Price constant
-                   uint   bar,          // Index of shift relative to the current bar for a specified number of periods back or forward).
+  double PSeries(uint applied_price,  
+                   uint   bar,          
                    const double &Open[],
                    const double &Low[],
                    const double &High[],
@@ -514,5 +514,100 @@ int StartingBarFind(Smooth_Method Method,int Length,int Phase)
         }
       default: return(Close[bar]);
      }
-//return(0);
   }
+
+double iPriceSeries(string          symbol,        
+                    ENUM_TIMEFRAMES timeframe,     
+                    uint            applied_price, 
+                    uint            bar,           
+                    bool            set            
+                    )
+  {
+   uint Bar;
+   double diPriceSeries,price[1];
+   if(!set)
+      Bar=Bars(symbol,timeframe)-1-bar;
+   else Bar=bar;
+   switch(applied_price)
+     {
+      case  1: CopyClose(symbol, timeframe, Bar, 1, price); diPriceSeries = price[0]; break;
+      case  2: CopyOpen (symbol, timeframe, Bar, 1, price); diPriceSeries = price[0]; break;
+      case  3: CopyHigh (symbol, timeframe, Bar, 1, price); diPriceSeries = price[0]; break;
+      case  4: CopyLow  (symbol, timeframe, Bar, 1, price); diPriceSeries = price[0]; break;
+      case  5: CopyHigh(symbol,timeframe,Bar,1,price); diPriceSeries=price[0];
+      CopyLow(symbol,timeframe,Bar,1,price); diPriceSeries+=price[0];
+      diPriceSeries/=2.0;
+      break;
+      case  6: CopyClose(symbol,timeframe,Bar,1,price); diPriceSeries=price[0];
+      CopyHigh (symbol, timeframe, Bar, 1, price); diPriceSeries += price[0];
+      CopyLow  (symbol, timeframe, Bar, 1, price); diPriceSeries += price[0];
+      diPriceSeries/=3.0;
+      break;
+      case  7: CopyClose(symbol,timeframe,Bar,1,price); diPriceSeries=price[0]*2;
+      CopyHigh (symbol, timeframe, Bar, 1, price); diPriceSeries += price[0];
+      CopyLow  (symbol, timeframe, Bar, 1, price); diPriceSeries += price[0];
+      diPriceSeries/=4.0;
+      break;
+
+      case  8: CopyClose(symbol,timeframe,Bar,1,price); diPriceSeries=price[0];
+      CopyOpen(symbol,timeframe,Bar,1,price); diPriceSeries+=price[0];
+      diPriceSeries/=2.0;
+      break;
+      case  9: CopyClose(symbol,timeframe,Bar,1,price); diPriceSeries=price[0];
+      CopyOpen (symbol, timeframe, Bar, 1, price); diPriceSeries += price[0];
+      CopyHigh (symbol, timeframe, Bar, 1, price); diPriceSeries += price[0];
+      CopyLow  (symbol, timeframe, Bar, 1, price); diPriceSeries += price[0];
+      diPriceSeries/=4.0;
+      break;
+      case 10:
+        {
+         double Open_[1],Low_[1],High_[1],Close_[1];
+         CopyClose(symbol,timeframe,Bar,1,Close_);
+         CopyOpen(symbol,timeframe,Bar,1,Open_);
+         CopyHigh(symbol,timeframe,Bar,1,High_);
+         CopyLow(symbol,timeframe,Bar,1,Low_);
+         if(Close_[0]>Open_[0])diPriceSeries=High_[0];
+         else
+           {
+            if(Close_[0]<Open_[0])
+               diPriceSeries=Low_[0];
+            else diPriceSeries=Close_[0];
+           }
+         break;
+        }
+      case 11:
+        {
+         double Open_[1],Low_[1],High_[1],Close_[1];
+         CopyClose(symbol,timeframe,Bar,1,Close_);
+         CopyOpen(symbol,timeframe,Bar,1,Open_);
+         CopyHigh(symbol,timeframe,Bar,1,High_);
+         CopyLow(symbol,timeframe,Bar,1,Low_);
+         if(Close_[0]>Open_[0])diPriceSeries=(High_[0]+Close_[0])/2.0;
+         else
+           {
+            if(Close_[0]<Open_[0])
+               diPriceSeries=(Low_[0]+Close_[0])/2.0;
+            else diPriceSeries=Close_[0];
+           }
+         break;
+        }
+      case 12:
+        {
+         double Open_[1],Low_[1],High_[1],Close_[1];
+         CopyClose(symbol,timeframe,Bar,1,Close_);
+         CopyOpen(symbol,timeframe,Bar,1,Open_);
+         CopyHigh(symbol,timeframe,Bar,1,High_);
+         CopyLow(symbol,timeframe,Bar,1,Low_);
+         double res=High_[0]+Low_[0]+Close_[0];
+
+         if(Close_[0]<Open_[0]) res=(res+Low_[0])/2;
+         if(Close_[0]>Open_[0]) res=(res+High_[0])/2;
+         if(Close_[0]==Open_[0]) res=(res+Close_[0])/2;
+         diPriceSeries=((res-Low_[0])+(res-High_[0]))/2;
+         break;
+        }
+      default: CopyClose(symbol,timeframe,Bar,1,price); diPriceSeries=price[0]; break;
+     }
+   return(diPriceSeries);
+  }
+  
