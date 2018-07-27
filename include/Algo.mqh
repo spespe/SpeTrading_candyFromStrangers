@@ -611,3 +611,13 @@ double iPriceSeries(string          symbol,
    return(diPriceSeries);
   }
   
+  
+  void iAlert(uchar price)
+  {
+   if(price<1)
+      Alert("The applied_price parameter must not be less than 1. You have specified incorrect value",
+            price," value 1 will be used");                    
+   if(price>11)
+      Alert("The parameter applied_price must not exceed 11. You have specified incorrect value",
+            price," value 1 will be used");
+  }
