@@ -621,3 +621,36 @@ double iPriceSeries(string          symbol,
       Alert("The parameter applied_price must not exceed 11. You have specified incorrect value",
             price," value 1 will be used");
   }
+  
+  double CM_A::MSeries(uint begin,             
+                                 uint prev_calculated,     
+                                 uint rates_total,         
+                                 int Length,               
+                                 ENUM_MA_METHOD MA_Method, 
+                                 double series,            
+                                 uint bar,                 
+                                 bool set                  
+                                 )
+  {
+
+   switch(MA_Method)
+     {
+      case MODE_SMA:  return(SMASeries (begin, prev_calculated, rates_total, Length, series, bar, set));
+      case MODE_EMA:  return(EMASeries (begin, prev_calculated, rates_total, Length, series, bar, set));
+      case MODE_SMMA: return(SMMASeries(begin, prev_calculated, rates_total, Length, series, bar, set));
+      case MODE_LWMA: return(LWMASeries(begin, prev_calculated, rates_total, Length, series, bar, set));
+      default:
+        {
+         if(bar==begin)
+           {
+            string word;
+            StringConcatenate(word,__FUNCTION__,"():",
+                              " The value should be between MODE_SMA to MODE_LWMA.",
+                              " The value it is not accepte;d ",MA_Method," value MODE_SMA used!");
+            Print(word);
+           }
+         return(SMASeries(begin,prev_calculated,rates_total,Length,series,bar,set));
+        }
+     }
+  
+  
