@@ -1,0 +1,364 @@
+
+extern double lotsize = 0.01;               
+extern bool money_management_active=true;   
+
+extern double minimum_lot=0.01;  
+extern double lot_increment=0.01;
+extern double maximum_lot=0.04;  
+
+extern double stoploss = 35;     
+extern double takeprofit = 73;   
+
+extern int bar = 1;
+extern ENUM_TIMEFRAMES timeframe = 0;
+
+extern bool signal_ma_cross_enabled = true;
+extern bool signal_close_ma_enabled = true;
+extern bool signal_close_ma_dist_enabled = true;
+extern double dist_from_ma2 = 0;       
+extern double max_dist_from_ma2 = 0;   
+extern double dist_from_ma3 = 35;      
+extern double max_dist_from_ma3 = 60;  
+
+
+//SMA #1
+extern int ma1_period = 1, ma1_method = MODE_SMA, ma1_price = PRICE_CLOSE; 
+double get_ma1(int _bar = -1, int tf = 0)
+{
+   if (tf == 0) tf = timeframe;
+   if (_bar == -1) _bar = bar;
+   return(iMA(symbol,tf,ma1_period,0,ma1_method,ma1_price,_bar));          
+}
+
+//SMA #2
+extern int ma2_period = 2, ma2_method = MODE_SMA, ma2_price = PRICE_CLOSE; 
+double get_ma2(int _bar = -1, int tf = 0)
+{
+   if (tf == 0) tf = timeframe;
+   if (_bar == -1) _bar = bar;
+   return(iMA(symbol,tf,ma2_period,0,ma2_method,ma2_price,_bar));          
+}
+
+//SMA #3
+extern int ma3_period = 50, ma3_method = MODE_SMA, ma3_price = PRICE_CLOSE;
+double get_ma3(int _bar = -1, int tf = 0)
+{
+   if (tf == 0) tf = timeframe;
+   if (_bar == -1) _bar = bar;
+   return(iMA(symbol,tf,ma3_period,0,ma3_method,ma3_price,_bar));            
+}
+
+extern bool long_enabled = true;              
+extern bool short_enabled = true;             
+extern bool reverse_strategy = true;          
+extern bool oneperbar = true;                 
+extern bool trade_only_signal_change = false;
+extern bool trade_only_firsttick = true;      
+extern bool run_signal_only_firsttick = true;
+extern bool trade_on_start = false;
+extern bool enableclose = true;              
+extern bool openafterclose = true;            
+extern int maxorders = 1;                     
+
+extern bool sl_virtual = false;
+extern bool tp_virtual = false;
+extern bool vstops_draw_line = false;
+extern bool realstops_draw_line = false;
+
+extern bool orderbymarket = true;  
+
+extern int _magic = 8888;          
+extern int slippage = 10;          
+
+extern color cl_buy = Blue;
+extern color cl_sell = Red;
+
+extern bool printcomment = false;
+
+CSignalHandler* signalhandler;
+CEventHandler* event;
+
+ushort ontick_on_activity;
+double next_lotsize = 0;
+
+class COrderExt : public COrder
+{
+public:
+
+   virtual void OnTick()
+   {
+      COrder::OnTick();
+      if (State() == ORDER_STATE_CLOSED) {
+         
+         if (GetProfitTicks() < 0) next_lotsize = GetLots()+lot_increment*1; 
+         else next_lotsize = minimum_lot;                                    
+   
+         if (next_lotsize>maximum_lot) next_lotsize=minimum_lot;             
+    
+         
+         next_lotsize = MathMax(next_lotsize,minimum_lot);                   
+         next_lotsize = MathMin(next_lotsize,maximum_lot);                   
+         
+      }
+   }
+};
+
+class COrderManagerExt : public COrderManager
+{
+protected:
+   virtual COrder* NewOrderObject() { return((COrder*)new COrderExt()); }
+   virtual CAttachedOrder* NewAttachedOrderObject() { return(new CAttachedOrder()); }
+};
+
+COrderManagerExt* ome;
+
+
+int signal()
+{
+   int signal = -1;
+   
+   if (signal_ma_cross_enabled) signal = signaladd(signal,signal_wrapper(signal_universal(
+       inticks(iClose(symbol,timeframe,bar)-get_ma3(bar)) >= dist_from_ma3 && inticks(iClose(symbol,timeframe,bar)-get_ma3(bar)) <= max_dist_from_ma3,    
+       inticks(-iClose(symbol,timeframe,bar)+get_ma3(bar)) >= dist_from_ma3 && inticks(-iClose(symbol,timeframe,bar)+get_ma3(bar)) <= max_dist_from_ma3   
+
+   ),"ma cross"));   
+   if (signal == -1) signal = SIGNAL_NO;
+   return(signal);
+}
+
+int closesignal()
+{
+   int signal = SIGNAL_NO;
+   return(signal);
+}
+
+int start()
+{
+
+   if (comments_enabled) addcomment("EUR/USD Consolidation");
+
+   isfirsttick((ENUM_TIMEFRAMES)timeframe);
+         
+   static double last_price;
+   if (MathAbs(last_price-Bid)>1*_symbol.m_tick_size) {
+      COrderBase::activity = COrderBase::activity | ACTIVITY_CUSTOM1;
+   }
+
+   symbolinfovars.InitVarsTick();
+
+   if ((COrderBase::activity & ontick_on_activity) != 0) {
+      COrderBase::activity = ACTIVITY_NOTHING;
+      om.OnTick();
+      om.CleanUp();  
+      last_price = Bid;
+   } else {
+      om.UpdateState();
+   }
+
+   if (isfirsttick || !run_signal_only_firsttick) { 
+      
+      bool enableopen = true;
+      
+      int signal = signal();
+      int closesignal = closesignal();
+
+      signalhandler.run(signal,closesignal,enableopen);
+
+      if (signal != 0)
+      {
+         int cnt;         
+         if (signal == SIGNAL_BUY)
+         {
+            if (!openafterclose) cnt = om.CntOrders(ORDERSELECT_ANY);
+            if (enableclose) om.CloseAll(ORDERSELECT_SHORT);
+            if (openafterclose) cnt = om.CntOrders(ORDERSELECT_ANY);
+            if (enableopen && cnt < maxorders && long_enabled) open_market(OP_BUY);
+         }
+         if (signal == SIGNAL_SELL)
+         {
+            if (!openafterclose) cnt = om.CntOrders(ORDERSELECT_ANY);
+            if (enableclose) om.CloseAll(ORDERSELECT_LONG);
+            if (openafterclose) cnt = om.CntOrders(ORDERSELECT_ANY);
+            if (enableopen && cnt < maxorders && short_enabled) open_market(OP_SELL);
+         }
+      }
+
+      if (closesignal == SIGNAL_BUY)
+      {
+         om.CloseAll(ORDERSELECT_SHORT);
+      }
+      if (closesignal == SIGNAL_SELL)
+      {
+         om.CloseAll(ORDERSELECT_LONG);
+      }
+      if (closesignal == SIGNAL_BOTH)
+      {
+         om.CloseAll(ORDERSELECT_ANY);
+      }
+      
+   }
+   
+   if (comments_enabled) {
+      writecomment_noformat();
+      if (printcomment) printcomment();
+      delcomment();
+   }
+   
+   return(0);
+}
+                                    
+
+
+double sl, tp, entry;
+void beforeorder(int cmd)
+{
+   if (ordertype_select(ORDERSELECT_MARKET,cmd)) entry = 0; 
+
+   sl = stoploss==0?0:getstoplossprice(symbol,(ENUM_ORDER_TYPE)cmd,stoploss,entry);
+   tp = takeprofit==0?0:gettakeprofitprice(symbol,(ENUM_ORDER_TYPE)cmd,takeprofit,entry);
+         
+   if (next_lotsize == 0) next_lotsize = minimum_lot;         
+    if (next_lotsize > maximum_lot) next_lotsize = minimum_lot;  
+         
+   if (money_management_active) lotsize = next_lotsize;
+         
+}
+
+void afterorder(int cmd, int ticket)
+{
+   
+}
+
+void open_market(int cmd)
+{
+   beforeorder(cmd);
+   COrder* _order = om.NewOrder(symbol,cmd,lotsize,0,sl,tp);
+   if (_order != NULL && _order.ticket >= 0) {
+      int ticket = _order.GetTicket();   
+   }
+   afterorder(cmd, ticket);
+}
+
+void open_pending(int cmd)
+{
+
+}
+
+void check_action(string action)
+{
+  #include <actions.mqh>
+}
+
+string eascript_currentaction = "";
+void OnChartEvent(const int id,        
+                  const long& lparam,   
+                  const double& dparam, 
+                  const string& sparam  
+                  )
+{
+   if (id == CHARTEVENT_CUSTOM+EVENT_FAKETICK) start();
+  
+   if (id == CHARTEVENT_CUSTOM+EASCRIPT_EVENT_ID) {
+      eascript_currentaction = sparam;
+      start();
+      eascript_currentaction = "";
+   }
+}
+
+int init()
+{
+   ontick_on_activity = ACTIVITY_CLOSE|ACTIVITY_DELETE|ACTIVITY_EXECUTE|ACTIVITY_STATECHANGE;
+   if (sl_virtual || tp_virtual || realstops_draw_line) ontick_on_activity = ontick_on_activity|ACTIVITY_CUSTOM1;
+ 
+   // EVENT HANGLING 
+   if (globaleventhandler == NULL) globaleventhandler = new CEventHandler();
+   event = globaleventhandler;
+   
+   // GLOBAL VARIABLES
+   symbolinfovars = new CSymbolInfoVars();
+   symbolinfovars.InitVars(Symbol());
+
+   // ORDER MANAGER
+   om = new COrderManagerExt();
+   ome = (COrderManagerExt*)om;
+   
+   om.magic = _magic;
+   om.sl_virtual = sl_virtual;
+   om.tp_virtual = tp_virtual;
+   om.retrainhistory = 1;
+   
+   // ORDER
+   COrderBase::magic_default = _magic;
+   COrder::sl_virtual_default = sl_virtual;
+   COrder::tp_virtual_default = tp_virtual;
+   COrder::vstops_draw_line = vstops_draw_line;
+   COrder::realstops_draw_line = realstops_draw_line;   
+
+   // TRADE
+   if (COrderBase::trade_default == NULL) COrderBase::trade_default = new CTrade();
+   if (IsTesting() && !IsVisualMode()) COrderBase::trade_default.LogLevel(LOG_LEVEL_ERRORS);
+   else COrderBase::trade_default.LogLevel(LOG_LEVEL_ALL);   
+   COrderBase::trade_default.SetColors(cl_buy, cl_sell);
+   COrderBase::trade_default.SetDeviationInPoints(slippage);
+   COrderBase::trade_default.SetIsEcn(orderbymarket);    
+      
+   // SIGNAL_HANDLER
+   if (signalhandler == NULL) signalhandler = new CSignalHandler(symbol,(ENUM_TIMEFRAMES)timeframe);   
+   signalhandler.oneperbar = oneperbar;
+   signalhandler.trade_on_start = trade_on_start;
+   signalhandler.comments_enabled = true;
+   signalhandler.trade_only_firsttick = trade_only_firsttick;
+   signalhandler.trade_only_signal_change = trade_only_signal_change;
+   signalhandler.comments_enabled = comments_enabled;
+   signalhandler.reverse_strategy = reverse_strategy;
+
+   // OPTIMIZATION FOR TESTING
+   if (IsTesting() && !IsVisualMode()) {      
+      globaleventhandler.SetLogLevel(E_ERROR);
+      scripts_enabled = false;
+      comments_enabled = false;
+   } else {
+      globaleventhandler.SetLogLevel(E_NOTICE|E_WARNING|E_ERROR|E_INFO);
+      run_signal_only_firsttick = false;
+   }
+
+   // FRACTIONAL PRICING
+   if (_symbol.IsFractional())
+   {
+      fractd(stoploss);
+      fractd(takeprofit);
+      slippage = slippage*10;
+      //TrailingStop.Fract();
+      fractd(dist_from_ma2);
+      fractd(max_dist_from_ma2); 
+      fractd(dist_from_ma3);
+      fractd(max_dist_from_ma3); 
+   }
+
+   // STORE OPEN ORDERS
+   for (int i = OrdersTotal()-1; i >= 0; i--) {
+      if (OrderSelect(i,SELECT_BY_POS,MODE_TRADES)) {
+         COrder* exord;
+         exord = om.ExistingOrder(OrderTicket());
+         if (exord != NULL) {  
+            if (!check_order(exord)) {
+               int idx = om.GetIdxByTicket(exord.GetTicket());
+               if (idx >= 0)
+                  om.orders.Delete(idx);
+            }            
+         } else {
+            //Print("Order Adding Failed");
+         }
+      }
+   }
+   om.AssignAttachedOrders();
+
+   #include <init.mqh>
+
+   return(0);
+}
+
+int deinit()
+{
+   return(0);
+}
