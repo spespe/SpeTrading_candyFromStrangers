@@ -695,3 +695,34 @@ double CMA::SMASeries(uint begin,
 return(sma);
   }
   
+  
+  
+  double CMoving_Average::EMASeries(uint begin,         
+                                  uint prev_calculated, 
+                                  uint rates_total,     
+                                  double Length,        
+                                  double series,        
+                                  uint bar,             
+                                  bool set              
+                                  )
+  {
+   if(BarCheck1(begin,bar,set)) return(EMPTY_VALUE);
+   double ema;
+   LengthCheck(Length);
+   if(bar==begin)
+     {
+      m_Pr=2.0/(Length+1.0);
+      m_Moving=series;
+     }
+   m_Moving=series*m_Pr+m_Moving *(1-m_Pr);
+   ema=m_Moving;
+   if(BarCheck4(rates_total,bar,set))
+     {
+      m_MOVING=m_Moving;
+     }
+   if(BarCheck5(rates_total,bar,set))
+     {
+      m_Moving=m_MOVING;
+     }
+   return(ema);
+  }
