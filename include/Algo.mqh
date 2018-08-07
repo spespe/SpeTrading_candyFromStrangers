@@ -697,7 +697,7 @@ return(sma);
   
   
   
-  double CMoving_Average::EMASeries(uint begin,         
+  double CMA::EMA(uint begin,         
                                   uint prev_calculated, 
                                   uint rates_total,     
                                   double Length,        
@@ -725,4 +725,54 @@ return(sma);
       m_Moving=m_MOVING;
      }
    return(ema);
+  }
+
+  
+double CMA::SMMA(uint begin,           
+                                   uint prev_calculated, 
+                                   uint rates_total,     
+                                   int Length,           
+                                   double series,        
+                                   uint bar,             
+                                   bool set              
+                                   )
+  {
+   if(BarCheck1(begin,bar,set)) return(EMPTY_VALUE);
+
+   int iii;
+   double smma;
+
+   LengthCheck(Length);
+
+   if(bar==begin && !SeriesArrayResize(__FUNCTION__,Length,m_SeriesArray,m_Size_))
+      return(EMPTY_VALUE);
+
+   Recount_ArrayZeroPos(m_count,Length,prev_calculated,rates_total,series,bar,m_SeriesArray,set);
+
+   if(BarCheck2(begin,bar,set,Length))
+     {
+      m_sum=0.0;
+      for(iii=0; iii<Length; iii++)
+         m_sum+=m_SeriesArray[iii];
+
+      m_Moving=(m_sum-series)/(Length-1);
+     }
+   else if(BarCheck3(begin,bar,set,Length)) return(EMPTY_VALUE);
+
+   m_sum=m_Moving *(Length-1)+series;
+   m_Moving=m_sum/Length;
+   smma=m_Moving;
+
+   if(BarCheck4(rates_total,bar,set))
+     {
+      m_SUM=m_sum;
+      m_MOVING=m_Moving;
+     }
+
+   if(BarCheck5(rates_total,bar,set))
+     {
+      m_sum=m_SUM;
+      m_Moving=m_MOVING;
+     }
+   return(smma);
   }
