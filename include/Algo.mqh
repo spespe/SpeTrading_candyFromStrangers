@@ -776,3 +776,46 @@ double CMA::SMMA(uint begin,
      }
    return(smma);
   }
+  
+  
+double CMA::LWMA(uint begin,uint prev_calculated,uint rates_total,int Length,double series,uint bar, bool set)
+  {
+   if(BarCheck1(begin,bar,set)) return(EMPTY_VALUE);
+   double lwma;
+   int iii,kkk,Length_=Length+1;
+   LengthCheck(Length);
+   if(bar==begin && !SeriesArrayResize(__FUNCTION__,Length_,m_SeriesArray,m_Size_))
+      return(EMPTY_VALUE);
+   Recount_ArrayZeroPos(m_count,Length_,prev_calculated,rates_total,series,bar,m_SeriesArray,set);
+   if(BarCheck2(begin,bar,set,Length_))
+     {
+      m_sum=0.0;
+      m_lsum=0.0;
+      m_weight=0;
+      int rrr=Length;
+
+      for(iii=1; iii<=Length; iii++,rrr--)
+        {
+         kkk=Recount_ArrayNumber(m_count,Length_,iii);
+         m_sum+=m_SeriesArray[kkk]*rrr;
+         m_lsum+=m_SeriesArray[kkk];
+         m_weight+=iii;
+        }
+     }
+   else if(BarCheck3(begin,bar,set,Length_)) return(EMPTY_VALUE);
+   m_sum+=series*Length-m_lsum;
+   kkk=Recount_ArrayNumber(m_count,Length_,Length);
+   m_lsum+=series-m_SeriesArray[kkk];
+   lwma=m_sum/m_weight;
+   if(BarCheck4(rates_total,bar,set))
+     {
+      m_SUM  = m_sum;
+      m_LSUM = m_lsum;
+     }
+   if(BarCheck5(rates_total,bar,set))
+     {
+      m_sum=m_SUM;
+      m_lsum=m_LSUM;
+     }
+return(lwma);
+  }
