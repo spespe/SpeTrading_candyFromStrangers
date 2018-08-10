@@ -819,3 +819,47 @@ double CMA::LWMA(uint begin,uint prev_calculated,uint rates_total,int Length,dou
      }
 return(lwma);
   }
+  
+  
+  double CStdDeviation::StdD(uint begin,uint prev_calculated, uint rates_total, int Length,double deviation,double series,double MovSeries,uint bar, bool set)
+  {
+   if(BarCheck1(begin,bar,set)) return(EMPTY_VALUE);
+   int iii,kkk;
+   double StdDev,m_SumX2;
+   if(bar==begin && !SeriesArrayResize(__FUNCTION__,Length,m_SeriesArray,m_Size_))
+      return(EMPTY_VALUE);
+   LengthCheck(Length);
+   Recount_ArrayZeroPos(m_count,Length,prev_calculated,rates_total,series,bar,m_SeriesArray,set);
+   if(BarCheck2(begin,bar,set,Length))
+     {
+      m_Sum=0.0;
+      m_Sum2=0.0;
+      for(iii=1; iii<Length; iii++)
+        {
+         kkk=Recount_ArrayNumber(m_count,Length,iii);
+         m_Sum+=m_SeriesArray[kkk];
+         m_Sum2+=MathPow(m_SeriesArray[kkk],2);
+        }
+     }
+   else if(BarCheck3(begin,bar,set,Length)) return(EMPTY_VALUE);
+   m_Sum+=series;
+   m_Sum2 += MathPow(series, 2);
+   m_SumX2 = Length * MathPow(MovSeries, 2) - 2 * MovSeries * m_Sum + m_Sum2;
+
+   kkk=Recount_ArrayNumber(m_count,Length,Length-1);
+   m_Sum2-=MathPow(m_SeriesArray[kkk],2);
+   m_Sum -=m_SeriesArray[kkk];
+
+   StdDev=deviation*MathSqrt(m_SumX2/Length);
+   if(BarCheck5(rates_total,bar,set))
+     {
+      m_Sum=m_SUM;
+      m_Sum2=m_SUM2;
+     }
+   if(BarCheck4(rates_total,bar,set))
+     {
+      m_SUM=m_Sum;
+      m_SUM2=m_Sum2;
+     }
+   return(StdDev);
+  }
