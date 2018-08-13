@@ -863,3 +863,77 @@ return(lwma);
      }
    return(StdDev);
   }
+  
+  void CJJMA::JJMAInit(uint begin,
+                     int  Din,
+                     double Phase,
+                     double Length,
+                     double series,
+                     uint bar)
+  {
+
+  if(bar==begin || Din!=0)
+     {
+      if(bar==begin)
+        {
+         m_midd1 = 63;
+         m_midd2 = 64;
+         m_start = false;
+
+         for(int numb = 0;       numb <= m_midd1; numb++) m_data[numb] = -1000000.0;
+         for(int numb = m_midd2; numb <= 127;     numb++) m_data[numb] = +1000000.0;
+
+         ArrayInitialize(m_bhoop1,true);
+         ArrayInitialize(m_bhoop2,true);
+         ArrayInitialize(m_bdata,true);
+         ArrayInitialize(m_hoop1_, 0.0);
+         ArrayInitialize(m_hoop2_, 0.0);
+         ArrayInitialize(m_hoop1,  0.0);
+         ArrayInitialize(m_hoop2,  0.0);
+         ArrayInitialize(m_array,  0.0);
+
+         m_djma = 0.0;
+         m_Sum1 = 0.0;
+         m_Sum2 = 0.0;
+         m_ser1 = 0.0;
+         m_ser2 = 0.0;
+         m_pos1 = 0.0;
+         m_pos2 = 0.0;
+         m_Loop1 = 0.0;
+         m_Loop2 = 0.0;
+         m_count1 = 0.0;
+         m_count2 = 0.0;
+         m_count3 = 0.0;
+         m_storage1 = 0.0;
+         m_storage2 = 0.0;
+         m_JMA=series;
+        }
+
+      if(Phase>=-100 && Phase<=100)
+         m_Phase=Phase/100.0+1.5;
+      if(Phase > +100) m_Phase = 2.5;
+      if(Phase < -100) m_Phase = 0.5;
+      double velA,velB,velC,velD;
+      if(Length>=1.0000000002)
+         velA=(Length-1.0)/2.0;
+      else velA=0.0000000001;
+      velA *= 0.9;
+      m_Krj = velA / (velA + 2.0);
+      velC = MathSqrt(velA);
+      velD = MathLog(velC);
+      m_var1= velD;
+      m_var2= m_var1;
+      //----
+      velB=MathLog(2.0);
+      m_sense=(m_var2/velB)+2.0;
+      if(m_sense<0.0) m_sense=0.0;
+      m_Kfd=m_sense;
+      //----
+      if(m_Kfd>=2.5)
+         m_degree=m_Kfd-2.0;
+      else m_degree=0.5;
+      //----
+      m_Krx = velC * m_Kfd;
+      m_Kct = m_Krx / (m_Krx + 1.0);
+     }
+  }
