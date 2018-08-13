@@ -923,16 +923,16 @@ return(lwma);
       velD = MathLog(velC);
       m_var1= velD;
       m_var2= m_var1;
-      //----
+	  //Adding if cycle for sensitivity
       velB=MathLog(2.0);
       m_sense=(m_var2/velB)+2.0;
       if(m_sense<0.0) m_sense=0.0;
       m_Kfd=m_sense;
-      //----
+	  // checking Kfd
       if(m_Kfd>=2.5)
          m_degree=m_Kfd-2.0;
       else m_degree=0.5;
-      //----
+	  //Setting here Krc
       m_Krx = velC * m_Kfd;
       m_Kct = m_Krx / (m_Krx + 1.0);
      }
