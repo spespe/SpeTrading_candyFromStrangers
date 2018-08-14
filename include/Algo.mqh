@@ -937,3 +937,17 @@ return(lwma);
       m_Kct = m_Krx / (m_Krx + 1.0);
      }
   }
+  
+void CJJMA::JJMACheck(string Length,int ExternLength)
+  {
+//Checking input params
+  if(ExternLength<1)
+     {
+      string word;
+      StringConcatenate(word,__FUNCTION__," (): Parameter ",Length,
+                        " The input specified it is incorrect",
+                        ExternLength," Using value 1 by default");
+      Print(word);
+      return;
+     }
+  }
