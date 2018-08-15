@@ -951,3 +951,28 @@ void CJJMA::JJMACheck(string Length,int ExternLength)
       return;
      }
   }
+  
+//Checking parameters  
+void CJJMA::JJMACheck2(string Phase,int ExternPhase)
+  {
+   if(ExternPhase<-100)
+     {
+      string word;
+      StringConcatenate
+      (word,__FUNCTION__," (): param ",Phase,
+       " must be no less than -100. Incorrect parameter specified.",
+       ExternPhase," value  -100 will be used");
+      Print(word);
+      return;
+     }
+   if(ExternPhase>+100)
+     {
+      string word;
+      StringConcatenate
+      (word,__FUNCTION__," (): param ",Phase,
+       " must not exceed +100. Incorrect parameter specified.",
+       ExternPhase," value  +100 will be used");
+      Print(word);
+      return;
+     }
+}
