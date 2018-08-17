@@ -976,3 +976,40 @@ void CJJMA::JJMACheck2(string Phase,int ExternPhase)
       return;
      }
 }
+
+
+double CT3::T3S(uint begin,uint prev_calculated,uint rates_total,int  Din,double Curvature,double Length,double series,uint bar,bool set)
+  {
+   if(BarCheck1(begin,bar,set)) return(EMPTY_VALUE);
+   double e0,T3_;
+   LengthCheck(Length);
+   T3Init(begin,Din,Curvature,Length,series,bar);
+
+   e0=series;
+   m_e1 = m_w1 * e0 + m_w2 * m_e1;
+   m_e2 = m_w1 * m_e1 + m_w2 * m_e2;
+   m_e3 = m_w1 * m_e2 + m_w2 * m_e3;
+   m_e4 = m_w1 * m_e3 + m_w2 * m_e4;
+   m_e5 = m_w1 * m_e4 + m_w2 * m_e5;
+   m_e6 = m_w1 * m_e5 + m_w2 * m_e6;
+   T3_=m_c1*m_e6+m_c2*m_e5+m_c3*m_e4+m_c4*m_e3;
+   if(BarCheck5(rates_total,bar,set))
+     {
+      m_e1 = m_E1;
+      m_e2 = m_E2;
+      m_e3 = m_E3;
+      m_e4 = m_E4;
+      m_e5 = m_E5;
+      m_e6 = m_E6;
+     }
+   if(BarCheck4(rates_total,bar,set))
+     {
+      m_E1 = m_e1;
+      m_E2 = m_e2;
+      m_E3 = m_e3;
+      m_E4 = m_e4;
+      m_E5 = m_e5;
+      m_E6 = m_e6;
+     }
+return(T3_);
+  }
