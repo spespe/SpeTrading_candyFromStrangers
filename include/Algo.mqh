@@ -1013,3 +1013,31 @@ double CT3::T3S(uint begin,uint prev_calculated,uint rates_total,int  Din,double
      }
 return(T3_);
   }
+
+void CT3::T3In(uint begin,int Din,double Curvature,double Length,double series,uint bar)
+  {
+  //Checking coeff
+  if(bar==begin || Din!=0)
+     {
+      double b=Curvature/100.0;
+      m_b2 = b * b;
+      m_b3 = m_b2 * b;
+      m_c1 = -m_b3;
+      m_c2 = (3 * (m_b2 + m_b3));
+      m_c3 = -3 * (2 * m_b2 + b + m_b3);
+      m_c4 = (1 + 3 * b + m_b3 + 3 * m_b2);
+      double n=1+0.5 *(Length-1);
+      m_w1 = 2 / (n + 1);
+      m_w2 = 1 - m_w1;
+
+      if(bar==begin)
+        {
+         m_e1 = series;
+         m_e2 = series;
+         m_e3 = series;
+         m_e4 = series;
+         m_e5 = series;
+         m_e6 = series;
+        }
+     }
+}
