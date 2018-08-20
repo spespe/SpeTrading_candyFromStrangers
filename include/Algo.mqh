@@ -1041,3 +1041,31 @@ void CT3::T3In(uint begin,int Din,double Curvature,double Length,double series,u
         }
      }
 }
+
+void CJX::JXI(uint begin,int Din,double Length,double series,uint bar)
+  {
+
+  if(bar==begin || Din!=0)
+     {
+      if(Length>=6)
+         m_w=Length-1;
+      else m_w=5;
+
+      m_Kg = 3 / (Length + 2.0);
+      m_Hg = 1.0 - m_Kg;
+
+      if(bar==begin)
+        {
+         m_f1 = series;
+         m_f2 = series;
+         m_f3 = series;
+         m_f4 = series;
+         m_f5 = series;
+         m_f6 = series;
+
+         m_AB = 0.5;
+         m_AC = 1.5;
+        }
+     }
+
+}
