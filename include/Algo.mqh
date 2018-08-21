@@ -1069,3 +1069,25 @@ void CJX::JXI(uint begin,int Din,double Length,double series,uint bar)
      }
 
 }
+
+//For parabolic smoothing
+void CParab::Parab(double Len)
+  {
+   int var_tmp;
+   m_sum_x=0;
+   m_sum_x2 = 0;
+   m_sum_x3 = 0;
+   m_sum_x4 = 0;
+
+   for(int iii=1; iii<=Len; iii++)
+     {
+      var_tmp=iii;
+      m_sum_x+=var_tmp;
+      var_tmp *= iii;
+      m_sum_x2+= var_tmp;
+      var_tmp *= iii;
+      m_sum_x3+= var_tmp;
+      var_tmp *= iii;
+      m_sum_x4+= var_tmp;
+     }
+}
