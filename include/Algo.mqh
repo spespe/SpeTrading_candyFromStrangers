@@ -1091,3 +1091,26 @@ void CParab::Parab(double Len)
       m_sum_x4+= var_tmp;
      }
 }
+
+double Moment::MomentS(uint begin, uint prev_calculated, uint rates_total, int Length, double series, uint bar, bool set)
+  {
+   if(BarCheck1(begin,bar,set)) return(EMPTY_VALUE);
+
+   int kkk,Length_=Length+1;
+   double Momentum;
+
+   LengthCheck(Length);
+
+   //Array size change
+   if(bar==begin && !SeriesArrayResize(__FUNCTION__,Length_,m_SeriesArray,m_Size_))
+      return(EMPTY_VALUE);
+
+   //Initializing the array
+   Recount_ArrayZeroPos(m_count,Length_,prev_calculated,rates_total,series,bar,m_SeriesArray,set);
+	
+   if(BarCheck3(begin,bar,set,Length_)) return(EMPTY_VALUE);
+   //Rate of changing
+   kkk=Recount_ArrayNumber(m_count,Length_,Length);
+   Momentum=series-m_SeriesArray[kkk];
+   return(Momentum);
+  }
