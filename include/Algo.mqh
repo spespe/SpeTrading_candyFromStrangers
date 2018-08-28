@@ -1117,8 +1117,10 @@ double Moment::MomentS(uint begin, uint prev_calculated, uint rates_total, int L
 
 double CnMomentum::nMomentumSeries(uint begin,uint prev_calculated,uint rates_total,int Length,double series,uint bar,bool set)
   {
-   if(BarCheck1(begin,bar,set)) return(EMPTY_VALUE);
-
+   //if(BarCheck1(begin,bar,set)) return(EMPTY_VALUE);
+   
+   if(BarsCount(raw,n-1)) return(begin)
+   
    int kkk,Length_=Length+1;
    double nMomentum;
 
@@ -1134,4 +1136,22 @@ double CnMomentum::nMomentumSeries(uint begin,uint prev_calculated,uint rates_to
    kkk=Recount_ArrayNumber(m_count,Length_,Length);
    nMomentum=(series-m_SeriesArray[kkk])/m_SeriesArray[kkk];
    return(nMomentum);
+  }
+  
+  int FindMaxSwing(Swinging Swing,int Length,int height)
+  {
+   switch(Swing)
+     {
+      case M:  return(Length);
+      case N:  return(0);
+      case L1: return(Length+1);
+      case L: return(Length);
+      case 30:  return(30);
+      case J:  return(0);
+      case L2: return(Length);
+      case T:    return(0);
+      case P2: return(Phase+2);
+      case L3:   return(Length+2);
+     }
+   return(0);
   }
