@@ -1115,7 +1115,7 @@ double Moment::MomentS(uint begin, uint prev_calculated, uint rates_total, int L
    return(Momentum);
   }
 
-double CnMomentum::nMomentumSeries(uint begin,uint prev_calculated,uint rates_total,int Length,double series,uint bar,bool set)
+double CMomen::MomenSeries(uint begin,uint prev_calculated,uint rates_total,int Length,double series,uint bar,bool set)
   {
    if(BarCheck1(begin,bar,set)) return(EMPTY_VALUE);
 
@@ -1135,3 +1135,26 @@ double CnMomentum::nMomentumSeries(uint begin,uint prev_calculated,uint rates_to
    nMomentum=(series-m_SeriesArray[kkk])/m_SeriesArray[kkk];
    return(nMomentum);
   }
+
+//Rate of change  
+  double ROC::ROCS(uint begin,uint prev_calculated,uint rates_total,int Length,double series,uint bar,bool set)
+  {
+   if(BarCheck1(begin,bar,set)) return(EMPTY_VALUE);
+
+   int kkk,Length_=Length+1;
+   double ROC;
+
+   LengthCheck(Length);
+
+   if(bar==begin && !SeriesArrayResize(__FUNCTION__,Length_,m_SeriesArray,m_Size_))
+      return(EMPTY_VALUE);
+
+   Recount_ArrayZeroPos(m_count,Length_,prev_calculated,rates_total,series,bar,m_SeriesArray,set);
+
+   if(BarCheck3(begin,bar,set,Length_)) return(EMPTY_VALUE);
+
+   kkk = Recount_ArrayNumber(m_count, Length_, Length);
+   ROC = 100 * series / m_SeriesArray[kkk];
+   return(ROC);
+  }
+
