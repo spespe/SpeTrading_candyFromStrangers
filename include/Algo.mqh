@@ -1176,3 +1176,28 @@ double CnMomentum::nMomentumSeries(uint begin,uint prev_calculated,uint rates_to
    kkk = Recount_ArrayNumber(m_count, Length_, Length);
    ROC = 100 * series / m_SeriesArray[kkk];
    return
+   
+   
+ double FATL::FATLS(uint beg,uint p_calc,uint r_tot,double s,uint b,bool set)
+  {
+   if(BarCheck1(beg,b,set)) return(EMPTY_VALUE);
+
+   Recount_ArrayZeroPos(m_count,m_Size_,p_calc,r_tot,s,b,m_SeriesArray,set);
+
+   if(BarCheck3(beg,b,set,m_Size_)) return(EMPTY_VALUE);
+
+double FATL=0.0;
+   if(BarCheck5(r_tot,b,set))
+     {
+      if(p_calc!=r_tot)
+        {
+         m_FATL=0.0;
+         for(int iii=1; iii<m_Size_; iii++)
+            m_FATL+=m_FATLTable[iii]*m_SeriesArray[Recount_ArrayNumber(m_count,m_Size_,iii)];
+        }
+      FATL=m_FATL+m_FATLTable[0]*m_SeriesArray[Recount_ArrayNumber(m_count,m_Size_,0)];
+     }
+   else for(int iii=0; iii<m_Size_; iii++)
+                    FATL+=m_FATLTable[iii]*m_SeriesArray[Recount_ArrayNumber(m_count,m_Size_,iii)];
+	return(FATL);
+  }
