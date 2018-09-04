@@ -1201,3 +1201,25 @@ double FATL=0.0;
                     FATL+=m_FATLTable[iii]*m_SeriesArray[Recount_ArrayNumber(m_count,m_Size_,iii)];
 	return(FATL);
   }
+  
+double CATL::ATLS(uint beg,uint P_calc,uint rates_t,double s,uint bb,bool SET)
+  {
+   if(BarCheck1(beg,bb,SET)) return(EMPTY_VALUE);
+
+   Recount_ArrayZeroPos(m_count,m_Size_,P_calc,rates_t,s,bb,m_SeriesArray,SET);
+   if(BarCheck3(beg,bb,SET,m_Size_)) return(EMPTY_VALUE);
+   double SATL=0.0;
+   if(BarCheck5(rates_t,bb,SET))
+     {
+      if(P_calc!=rates_t)
+        {
+         m_SATL=0.0;
+         for(int iii=1; iii<m_Size_; iii++)
+            m_SATL+=m_SATLTable[iii]*m_SeriesArray[Recount_ArrayNumber(m_count,m_Size_,iii)];
+        }
+      SATL=m_SATL+m_SATLTable[0]*m_SeriesArray[Recount_ArrayNumber(m_count,m_Size_,0)];
+     }
+   else for(int iii=0; iii<m_Size_; iii++)
+                    SATL+=m_SATLTable[iii]*m_SeriesArray[Recount_ArrayNumber(m_count,m_Size_,iii)];
+   return(SATL);
+  }
