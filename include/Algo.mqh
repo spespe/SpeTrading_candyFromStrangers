@@ -1223,3 +1223,25 @@ double CATL::ATLS(uint beg,uint P_calc,uint rates_t,double s,uint bb,bool SET)
                     SATL+=m_SATLTable[iii]*m_SeriesArray[Recount_ArrayNumber(m_count,m_Size_,iii)];
    return(SATL);
   }
+  
+double CRSTL::RSTLS(uint beg,uint P_calc,uint rates_t,double series,uint b,bool SET)
+  {
+   if(BarCheck1(beg,b,SET)) return(EMPTY_VALUE);
+
+   Recount_ArrayZeroPos(m_count,m_Size_,P_calc,rates_t,series,b,m_SeriesArray,SET);
+   if(BarCheck3(beg,b,SET,m_Size_)) return(EMPTY_VALUE);
+   double RSTL=0.0;
+   if(BarCheck5(rates_t,b,SET))
+     {
+      if(P_calc!=rates_t)
+        {
+         m_RSTL=0.0;
+         for(int iii=1; iii<m_Size_; iii++)
+            m_RSTL+=m_RSTLTable[iii]*m_SeriesArray[Recount_ArrayNumber(m_count,m_Size_,iii)];
+        }
+      RSTL=m_RSTL+m_RSTLTable[0]*m_SeriesArray[Recount_ArrayNumber(m_count,m_Size_,0)];
+     }
+   else for(int iii=0; iii<m_Size_; iii++)
+                    RSTL+=m_RSTLTable[iii]*m_SeriesArray[Recount_ArrayNumber(m_count,m_Size_,iii)];
+   return(RSTL);
+  }
