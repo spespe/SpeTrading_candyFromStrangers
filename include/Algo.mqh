@@ -1245,3 +1245,27 @@ double CRSTL::RSTLS(uint beg,uint P_calc,uint rates_t,double series,uint b,bool 
                     RSTL+=m_RSTLTable[iii]*m_SeriesArray[Recount_ArrayNumber(m_count,m_Size_,iii)];
    return(RSTL);
   }
+
+double CRFTL::RFTLS(uint begin,uint prev_calculated,uint rates_total,double series,uint bar,bool set)
+  {
+   if(BarCheck1(begin,bar,set)) return(EMPTY_VALUE);
+   Recount_ArrayZeroPos(m_count,m_Size_,prev_calculated,rates_total,series,bar,m_SeriesArray,set);
+   if(BarCheck3(begin,bar,set,m_Size_)) return(EMPTY_VALUE);
+   double RFTL=0.0;
+   if(BarCheck5(rates_total,bar,set))
+     {
+      if(prev_calculated!=rates_total)
+        {
+         m_RFTL=0.0;
+         for(int iii=1; iii<m_Size_; iii++)
+            m_RFTL+=m_RFTLTable[iii]*m_SeriesArray[Recount_ArrayNumber(m_count,m_Size_,iii)];
+        }
+      RFTL=m_RFTL+m_RFTLTable[0]*m_SeriesArray[Recount_ArrayNumber(m_count,m_Size_,0)];
+     }
+   else for(int iii=0; iii<m_Size_; iii++)
+                    RFTL+=m_RFTLTable[iii]*m_SeriesArray[Recount_ArrayNumber(m_count,m_Size_,iii)];
+   return(RFTL);
+  }
+
+  
+  
