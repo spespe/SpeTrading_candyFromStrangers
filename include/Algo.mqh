@@ -1246,7 +1246,7 @@ double CRSTL::RSTLS(uint beg,uint P_calc,uint rates_t,double series,uint b,bool 
    return(RSTL);
   }
 
-double CRFTL::RFTLS(uint begin,uint prev_calculated,uint rates_total,double series,uint bar,bool set)
+double CRFTL::RFTLSeries(uint begin,uint prev_calculated,uint rates_total,double series,uint bar,bool set)
   {
    if(BarCheck1(begin,bar,set)) return(EMPTY_VALUE);
    Recount_ArrayZeroPos(m_count,m_Size_,prev_calculated,rates_total,series,bar,m_SeriesArray,set);
@@ -1268,4 +1268,23 @@ double CRFTL::RFTLS(uint begin,uint prev_calculated,uint rates_total,double seri
   }
 
   
-  
+//BARS NUMBER CALCULATION
+int CXM::GBars(Method M,int L,int P)
+  {
+//----+ 
+   switch(M)
+     {
+      case MODE_SMA_:  return(L);
+      case MODE_EMA_:  return(0);
+      case MODE_SMMA_: return(L+1);
+      case MODE_LWMA_: return(L);
+      case MODE_JJMA:  return(30);
+      case MODE_JurX:  return(0);
+      case MODE_ParMA: return(L);
+      case MODE_T3:    return(0);
+      case MODE_VIDYA: return(P+2);
+      case MODE_AMA:   return(L+2);
+     }
+//----+
+   return(0);
+  }
