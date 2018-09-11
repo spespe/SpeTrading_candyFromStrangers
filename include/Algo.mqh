@@ -1288,3 +1288,25 @@ int CXM::GBars(Method M,int L,int P)
 //----+
    return(0);
   }
+
+  
+//CXMA
+double CXMA::XMAS (uint beg,uint p_cal,uint r_tot,smet Met,int Ph,int Ln,double s,uint b,bool s)
+  {
+   XMAInit(Met);
+
+   switch(Met)
+     {
+      case MODE_SMA_:  return(SMA.SMASeries(beg,p_cal,r_tot,Ln,s,b,s));
+      case MODE_EMA_:  return(EMA.EMASeries(beg,p_cal,r_tot,Ln,s,b,s));
+      case MODE_SMMA_: return(SMMA.SMMASeries(beg,p_cal,r_tot,Ln,s,b,s));
+      case MODE_LWMA_: return(LWMA.LWMASeries(beg,p_cal,r_tot,Ln,s,b,s));
+      case MODE_JJMA:  return(JJMA.JJMASeries(beg,p_cal,r_tot,0,Ph,Ln,s,b,s));
+      case MODE_JurX:  return(JurX.JurXSeries(beg,p_cal,r_tot,0,Ln,s,b,s));
+      case MODE_ParMA: return(ParMA.ParMASeries(beg,p_cal,r_tot,Ln,s,b,s));
+      case MODE_T3:    return(T3.T3Series(beg,p_cal,r_tot,0,Ph,Ln,s,b,s));
+      case MODE_VIDYA: return(VIDYA.VIDYASeries(beg,p_cal,r_tot,Ph,Ln,s,b,s));
+      case MODE_AMA:   return(AMA.AMASeries(beg,p_cal,r_tot,Ln,2,Ph,2.0,s,b,s));
+     }
+return(0.0);
+  }
