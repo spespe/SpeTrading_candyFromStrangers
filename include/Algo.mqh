@@ -1310,3 +1310,19 @@ double CXMA::XMAS (uint beg,uint p_cal,uint r_tot,smet Met,int Ph,int Ln,double 
      }
 return(0.0);
   }
+  
+  
+//Check for depth of length
+void CXMA::XMALCheck(string LName,int ExtLen)
+  {
+   if(ExtLen<1)
+     {
+      string w;
+      StringConcatenate
+      (w,__FUNCTION__," (): Par ",LName,
+       " should not be less than 1.",
+       ExtLen," Will be use the value 1 by default.");
+      Print(w);
+      return;
+     }
+  }
