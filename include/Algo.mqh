@@ -1321,8 +1321,23 @@ void CXMA::XMALCheck(string LName,int ExtLen)
       StringConcatenate
       (w,__FUNCTION__," (): Par ",LName,
        " should not be less than 1.",
-       ExtLen," Will be use the value 1 by default.");
+       ExtLen," 1 will be used by default.");
       Print(w);
       return;
      }
   }
+//Check smooth period
+void CMovST::MALenCheck(string LName,int ExtLen)
+{
+if(ExtLen<1)
+ {
+  string w;
+  StringConcatenate
+  (w,__FUNCTION__," (): Par ",LName,
+   " should not be no less than 1.",
+   ExtLen," 1 will be used by default.");
+  Print(w);
+  return;
+ }
+}
+
