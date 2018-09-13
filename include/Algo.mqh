@@ -1341,3 +1341,24 @@ if(ExtLen<1)
  }
 }
 
+//recalculatio of position of elem in the array
+void CMovST::R_ArrZP(int &cc,int L,uint p_calc,uint r_tot,double s,int bb,double &Array[],bool s)
+  {
+   if(s)
+     {
+      if(bb!=r_tot-p_calc)
+        {
+         cc--;
+         if(cc<0) cc=L-1;
+        }
+     }
+   else
+     {
+      if(bb!=p_calc-1)
+        {
+         cc--;
+         if(cc<0) cc=L-1;
+        }
+     }
+   Array[cc]=s;
+  }
