@@ -1362,3 +1362,21 @@ void CMovST::R_ArrZP(int &cc,int L,uint p_calc,uint r_tot,double s,int bb,double
      }
    Array[cc]=s;
   }
+
+//Changing the size of the array
+bool CMST::ArraySizeChange(string FName,int Len,double &Array[],int &Sz_)
+  {
+   if(Len>Sz_)
+     {
+      int Size=Len+1;
+
+      if(ArrayResize(Array,Size)==-1)
+        {
+         ArrayResizeErrorPrint(FName,Sz_);
+         return(false);
+        }
+
+      Sz_=Sz;
+     }
+   return(true);
+  }
