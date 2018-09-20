@@ -1380,3 +1380,23 @@ bool CMST::ArraySizeChange(string FName,int Len,double &Array[],int &Sz_)
      }
    return(true);
   }
+  
+  
+bool CMST::ArrResError(string FName,int &S_)
+  {
+   string lable,word;
+   StringConcatenate(lable,FName,"():");
+   StringConcatenate(word,lable," Error!!!"," the size of the array of variables of the function ",FName,"()!");
+   Print(word);
+   int error=GetLastError();
+   ResetLastError();
+   if(error>4000)
+     {
+      StringConcatenate(word,lable,"(): Error code ",error);
+      Print(word);
+     }
+
+   S_=-2;
+   return(false);
+   return(true);
+  }
