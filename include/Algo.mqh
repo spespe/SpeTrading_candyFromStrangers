@@ -1400,3 +1400,10 @@ bool CMST::ArrResError(string FName,int &S_)
    return(false);
    return(true);
   }
+
+//Transforming time series into array
+int CMovSeriesTools::Recount_ArrayNumber(int count,int Length,int Number){
+	int ArrNumber=Number+count;
+	if(ArrNumber>Length-1) ArrNumber-=Length;
+	return(ArrNumber);
+}
