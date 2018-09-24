@@ -1402,8 +1402,24 @@ bool CMST::ArrResError(string FName,int &S_)
   }
 
 //Transforming time series into array
-int CMovSeriesTools::Recount_ArrayNumber(int count,int Length,int Number){
+int CMST::Recount_ArrayNumber(int count,int Length,int Number){
 	int ArrNumber=Number+count;
 	if(ArrNumber>Length-1) ArrNumber-=Length;
 	return(ArrNumber);
 }
+
+// Starting calculation bar check                     |
+bool CMST::BC2(int b,int bb,bool Set,int Length)
+  {
+   if((!Set && bb==b+Length-1) || (Set && bb==b-Length+1))
+      return(true);
+   return(false);
+  }
+
+// bar smoothing check            |
+bool CMST::BC3(int b,int bb,bool Set,int Length)
+  {
+   if((!Set && bb<b+Length-1) || (Set && bb>b-Length+1))
+      return(true);
+   return(false);
+  }
