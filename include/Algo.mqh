@@ -1423,3 +1423,22 @@ bool CMST::BC3(int b,int bb,bool Set,int Length)
       return(true);
    return(false);
   }
+  
+// XMA smoothing get string
+string CXMA::GetString(SM Method)
+  {
+   switch(Method)
+     {
+      case MODE_SMA_:  return("SMA");
+      case MODE_EMA_:  return("EMA");
+      case MODE_SMMA_: return("SMMA");
+      case MODE_LWMA_: return("LWMA");
+      case MODE_JJMA:  return("JJMA");
+      case MODE_JurX:  return("JurX");
+      case MODE_ParMA: return("ParMA");
+      case MODE_T3:    return("T3");
+      case MODE_VIDYA: return(" VIDYA");
+      case MODE_AMA:   return("AMA");
+     }
+return("");
+  }
