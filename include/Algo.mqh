@@ -1442,3 +1442,56 @@ string CXMA::GetString(SM Method)
      }
 return("");
   }
+  
+void CXMA::XMAPhC(string Pn,int ExtP,Smooth_Method Met)
+  {
+   switch(Met)
+     {
+      case MODE_SMA_:  break;
+      case MODE_EMA_:  break;
+      case MODE_SMMA_: break;
+      case MODE_LWMA_: break;
+      case MODE_JJMA:
+         if(ExtP<-100)
+           {
+            string word;
+            StringConcatenate(word,__FUNCTION__," (): Parameter ",Pn," cannot be less than -100.",ExtP," default -100 will be used.");
+            Print(word);
+            break;
+           }
+         if(ExtP>+100)
+           {
+            string word;
+            StringConcatenate(word,__FUNCTION__," (): Parameter ",Pn," cannot be less than +100.",ExtP," default +100 will be used.");
+            Print(word);
+            break;;
+           }
+         break;
+      case MODE_JurX:  break;
+      case MODE_ParMA: break;
+      case MODE_T3:    break;
+      if(ExtP<1)
+        {
+         string word;
+         StringConcatenate(word,__FUNCTION__," (): Parameter ",Pn," cannot be less than -1.",ExtP," default -1 will be used.");
+         Print(word);
+         break;
+        }
+      case MODE_VIDYA:
+         if(ExtP<1)
+           {
+            string word;
+            StringConcatenate(word,__FUNCTION__," (): Parameter ",Pn," cannot be less than 1.",ExtP," default 1 will be used.");
+            Print(word);
+            break;
+           }
+      case MODE_AMA:
+         if(ExtP<1)
+           {
+            string word;
+            StringConcatenate(word,__FUNCTION__," (): Parameter ",Pn," cannot be less than 1.",ExtP," default 1 will be used.");
+            Print(word);
+            break;
+           }
+     }
+  }
