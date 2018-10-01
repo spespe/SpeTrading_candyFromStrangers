@@ -1495,3 +1495,15 @@ void CXMA::XMAPhC(string Pn,int ExtP,Smooth_Method Met)
            }
      }
   }
+
+  bool CMovS::BC4(int RTot,int b,bool Set)
+  {
+   if((!Set && b==RTot-2) || (Set && b==1)) return(true);
+   return(false);
+  }
+
+  bool CMovST::BC1(int B,int bar,bool Set)
+  {
+   if((!Set && bar<B) || (Set && bar>B)) return(true);
+   return(false);
+  }
