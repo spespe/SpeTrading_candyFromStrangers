@@ -1507,3 +1507,45 @@ void CXMA::XMAPhC(string Pn,int ExtP,Smooth_Method Met)
    if((!Set && bar<B) || (Set && bar>B)) return(true);
    return(false);
   }
+
+//Non linear smooth
+double CJX::JXS(uint b,uint p_calc,uint r_tot,int  Din,double Length,double series,uint bar,bool set)
+  {
+   if(BarCheck1(b,bar,set)) return(EMPTY_VALUE);
+   double V1,V2,JurX_;
+   LengthCheck(Length);
+   JurXInit(b,Din,Length,series,bar);
+
+   m_f1   =  m_Hg * m_f1 + m_Kg * series;
+   m_f2   =  m_Kg * m_f1 + m_Hg * m_f2;
+   V1     =  m_AC * m_f1 - m_AB * m_f2;
+   m_f3   =  m_Hg * m_f3 + m_Kg * V1;
+   m_f4   =  m_Kg * m_f3 + m_Hg * m_f4;
+   V2     =  m_AC * m_f3 - m_AB * m_f4;
+   m_f5   =  m_Hg * m_f5 + m_Kg * V2;
+   m_f6   =  m_Kg * m_f5 + m_Hg * m_f6;
+   JurX_  =  m_AC * m_f5 - m_AB * m_f6;
+
+   if(BarCheck5(r_tot,bar,set))
+     {
+      m_f1 = m_F1;
+      m_f2 = m_F2;
+      m_f3 = m_F3;
+      m_f4 = m_F4;
+      m_f5 = m_F5;
+      m_f6 = m_F6;
+     }
+
+   if(BarCheck4(r_tot,bar,set))
+     {
+      m_F1 = m_f1;
+      m_F2 = m_f2;
+      m_F3 = m_f3;
+      m_F4 = m_f4;
+      m_F5 = m_f5;
+      m_F6 = m_f6;
+     }
+
+   return(JurX_);
+
+  }
