@@ -1549,3 +1549,27 @@ double CJX::JXS(uint b,uint p_calc,uint r_tot,int  Din,double Length,double seri
    return(JurX_);
 
   }
+  
+  
+double CCMO::VID(uint beg,uint p_calc,uint r_tot,int CMO_Length,double EMA_Length,double series,uint bar,bool set)
+  {
+   double vid,CMO_=CMOSeries(beg,p_calc,r_tot,CMO_Length,series,bar,set);
+   if(BarCheck2(beg,bar,set,CMO_Length+3))
+     {
+      m_Vid=series;
+      m_SmoothFactor=2.0/(EMA_Length+1.0);
+     }
+   else if(BarCheck3(beg,bar,set,CMO_Length+3)) return(EMPTY_VALUE);
+   CMO_*=m_SmoothFactor;
+   m_Vid=CMO_*series+(1-CMO_)*m_Vid;
+   vid=m_Vid;
+   if(BarCheck5(r_tot,bar,set))
+     {
+      m_Vid=m_Vid_;
+     }
+   if(BarCheck4(r_tot,bar,set))
+     {
+      m_Vid_=m_Vid;
+     }
+   return(vid);
+  }
