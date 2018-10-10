@@ -1573,3 +1573,15 @@ double CCMO::VID(uint beg,uint p_calc,uint r_tot,int CMO_Length,double EMA_Lengt
      }
    return(vid);
   }
+
+  
+double C_A_MA::AMAS(uint begin,uint p_calc,uint r_tot,int Length,int F_length,int S_Length,double Rate,double s,uint bar,bool set)
+  {
+   if(BarCheck1(begin,bar,set)) return(EMPTY_VALUE);
+   double signal,ER,ERSC,SSC,dprice,ama;
+   int iii,kkk,rrr,size=Length+1;
+
+   if(bar==begin)
+      if(!SeriesArrayResize(__FUNCTION__,size,m_SeriesArray,m_Size_1)
+         || !SeriesArrayResize(__FUNCTION__,size,m_dSeriesArray,m_Size_2))
+         return(EMPTY_VALUE);
