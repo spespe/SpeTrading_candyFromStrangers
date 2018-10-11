@@ -1585,3 +1585,52 @@ double C_A_MA::AMAS(uint begin,uint p_calc,uint r_tot,int Length,int F_length,in
       if(!SeriesArrayResize(__FUNCTION__,size,m_SeriesArray,m_Size_1)
          || !SeriesArrayResize(__FUNCTION__,size,m_dSeriesArray,m_Size_2))
          return(EMPTY_VALUE);
+   LengthCheck(Length);
+
+   Recount_ArrayZeroPos(m_count,size,prev_calculated,rates_total,series,bar,m_SeriesArray,set);
+
+   if(BarCheck1(begin+1,bar,set)) return(EMPTY_VALUE);
+
+   kkk=Recount_ArrayNumber(m_count,size,1);
+   dprice=series-m_SeriesArray[kkk];
+   m_dSeriesArray[m_count]=dprice;
+
+   if(BarCheck2(begin,bar,set,Length+3))
+     {
+      rrr=Recount_ArrayNumber(m_count,size,1);
+      m_Ama=m_SeriesArray[rrr];
+      m_slowSC = (2.0 / (Slow_Length + 1));
+      m_fastSC = (2.0 / (Fast_Length + 1));
+      m_dSC=m_fastSC-m_slowSC;
+      m_noise=0.000000001;
+
+      for(iii=1; iii<Length; iii++)
+        {
+         rrr=Recount_ArrayNumber(m_count,size,iii);
+         m_noise+=MathAbs(m_dSeriesArray[rrr]);
+        }
+     }
+   else if(BarCheck3(begin,bar,set,Length+3)) return(EMPTY_VALUE);
+
+   m_noise+=MathAbs(dprice);
+   rrr=Recount_ArrayNumber(m_count,size,Length);
+   signal=MathAbs(series-m_SeriesArray[rrr]);
+   ER=signal/m_noise;
+   ERSC= ER *  m_dSC;
+   SSC = ERSC+m_slowSC;
+   m_Ama=m_Ama+(MathPow(SSC,Rate) *(series-m_Ama));
+   ama =  m_Ama;
+   kkk = Recount_ArrayNumber( m_count, size, Length - 1);
+   m_noise-=MathAbs(m_dSeriesArray[kkk]);
+   if(BarCheck5(rates_total,bar,set))
+     {
+      m_noise=m_NOISE;
+      m_Ama=m_AMA_;
+     }
+   if(BarCheck4(rates_total,bar,set))
+     {
+      m_AMA_=m_Ama;
+      m_NOISE=m_noise;
+     }
+	return(ama);
+  }
