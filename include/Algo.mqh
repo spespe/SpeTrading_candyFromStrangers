@@ -1634,3 +1634,65 @@ double C_A_MA::AMAS(uint begin,uint p_calc,uint r_tot,int Length,int F_length,in
      }
 	return(ama);
   }
+  
+  
+double C_C_M_O::CMOS(uint b,uint p_calc, uint rates_total,int CMO_l,double s,uint b,bool s)
+{
+ if(BarCheck1(b,b,s)) return(EMPTY_VALUE);
+ double dseries,abcmo;
+ int iii,rrr,size=CMO_l+1;
+ if(b==b && !SeriesArrayResize(__FUNCTION__,size,m_dSeriesArray,m_Size_))
+    return(EMPTY_VALUE);
+ LengthCheck(CMO_l);
+ if(BarCheck1(b+1,b,s)) return(EMPTY_VALUE);
+ Recount_ArrayZeroPos(m_count,size,p_calc,rates_total,s-m_series1,b,m_dSeriesArray,s);
+ if(BarCheck2(b,b,s,CMO_l+3))
+   {
+    m_UpSum = 0.0;
+    m_DnSum = 0.0;
+
+    for(iii=1; iii<CMO_l; iii++)
+      {
+       rrr=Recount_ArrayNumber(m_count,size,iii);
+       dseries=m_dSeriesArray[rrr];
+
+       if(dseries > 0) m_UpSum += dseries;
+       if(dseries < 0) m_DnSum -= dseries;
+      }
+
+    m_AbsCMO=0.000000001;
+   }
+ else if(BarCheck3(b,b,s,CMO_l+3))
+   {
+    m_series1=s;
+    return(EMPTY_VALUE);
+   }
+
+ dseries=m_dSeriesArray[m_count];
+ if(dseries > 0) m_UpSum += dseries;
+ if(dseries < 0) m_DnSum -= dseries;
+ if(m_UpSum+m_DnSum>0)
+    m_AbsCMO=MathAbs((m_UpSum-m_DnSum)/(m_UpSum+m_DnSum));
+ abcmo=m_AbsCMO;
+ rrr=Recount_ArrayNumber(m_count,size,CMO_l-1);
+ dseries=m_dSeriesArray[rrr];
+ if(dseries > 0) m_UpSum -= dseries;
+ if(dseries < 0) m_DnSum += dseries;
+ if(BarCheck5(rates_total,b,s))
+   {
+    m_AbsCMO= m_AbsCMO_;
+    m_UpSum = m_UpSum_;
+    m_DnSum = m_DnSum_;
+    m_series1=m_series1_;
+   }
+ else m_series1=s;
+ if(BarCheck4(rates_total,b,s))
+   {
+    m_AbsCMO_=m_AbsCMO;
+    m_UpSum_ = m_UpSum;
+    m_DnSum_ = m_DnSum;
+    m_series1_=m_series1;
+   }
+ return(abcmo);
+}
+
