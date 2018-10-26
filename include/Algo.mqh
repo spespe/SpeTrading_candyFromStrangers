@@ -1734,3 +1734,28 @@ ValTL::ValTL()
 
    ArrayCopy(m_ValLTable,ValLTable,0,0,WHOLE_ARRAY);
   }
+
+void C__XMA::XMAI(Smooth_Method M)
+{
+if(m_init)return;
+else
+ {
+  m_init=true;
+  m_Method=M;
+ }
+
+switch(M)
+ {
+  case MODE_SMA_:  SMA   = new CMoving_Average; break;
+  case MODE_EMA_:  EMA   = new CMoving_Average; break;
+  case MODE_SMMA_: SMMA  = new CMoving_Average; break;
+  case MODE_LWMA_: LWMA  = new CMoving_Average; break;
+  case MODE_JJMA:  JJMA  = new CJJMA;           break;
+  case MODE_JurX:  JurX  = new CJurX;           break;
+  case MODE_ParMA: ParMA = new CParMA;          break;
+  case MODE_T3:    T3    = new CT3;             break;
+  case MODE_VIDYA: VIDYA = new CCMO;            break;
+  case MODE_AMA:   AMA   = new CAMA;            break;
+  default:                                      break;
+ }
+}
