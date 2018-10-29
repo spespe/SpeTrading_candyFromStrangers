@@ -1759,3 +1759,23 @@ switch(M)
   default:                                      break;
  }
 }
+
+
+//deinitialization
+void C__XMA::~XMAI()
+  {
+   switch(m_Method)
+     {
+      case MODE_SMA_:  delete SMA;   break;
+      case MODE_EMA_:  delete EMA;   break;
+      case MODE_SMMA_: delete SMMA;  break;
+      case MODE_LWMA_: delete LWMA;  break;
+      case MODE_JJMA:  delete JJMA;  break;
+      case MODE_JurX:  delete JurX;  break;
+      case MODE_ParMA: delete ParMA; break;
+      case MODE_T3:    delete T3;    break;
+      case MODE_VIDYA: delete VIDYA; break;
+      case MODE_AMA:   delete AMA;   break;
+      default:                       break;
+     }
+}
