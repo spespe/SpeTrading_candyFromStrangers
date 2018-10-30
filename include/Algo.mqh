@@ -1779,3 +1779,15 @@ void C__XMA::~XMAI()
       default:                       break;
      }
 }
+
+
+double par_MovA::par_MovASeries(uint begin,           
+                           uint prev_calculated, 
+                           uint rates_total,     
+                           int Length,           
+                           double series,        
+                           uint bar,             
+                           bool set              
+                           )
+  {
+   if(BarCheck1(begin,bar,set)) return(EMPTY_VALUE);
