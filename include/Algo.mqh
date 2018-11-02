@@ -1791,3 +1791,32 @@ double par_MovA::par_MovASeries(uint begin,
                            )
   {
    if(BarCheck1(begin,bar,set)) return(EMPTY_VALUE);
+   
+   int iii,kkk;
+   double S,B0,B1,B2,parma;
+   double A,B,C,D,E,F;
+   double K,L,M,P,Q,R;
+   double sum_y,sum_xy,sum_x2y,var_tmp;
+
+   if(bar==begin && !SeriesArrayResize(__FUNCTION__,Length,m_SeriesArray,m_Size_))
+      return(EMPTY_VALUE);
+   LengthCheck(Length);
+   Recount_ArrayZeroPos(m_count,Length,prev_calculated,rates_total,series,bar,m_SeriesArray,set);
+
+   if(BarCheck2(begin,bar,set,Length)) ParMAInit(Length);
+   else if(BarCheck3(begin,bar,set,Length)) return(EMPTY_VALUE);
+
+   sum_y   = 0.0;
+   sum_xy  = 0.0;
+   sum_x2y = 0.0;
+   for(iii=1; iii<=Length; iii++)
+     {
+      kkk=Recount_ArrayNumber(m_count,Length,Length-iii);
+      var_tmp  = m_SeriesArray[kkk];
+      sum_y   += var_tmp;
+      sum_xy  += iii * var_tmp;
+      parma += iii * iii * var_tmp;
+     }
+
+return(parma);
+  }
