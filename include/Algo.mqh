@@ -1820,3 +1820,9 @@ double par_MovA::par_MovASeries(uint begin,
 
 return(parma);
   }
+
+bool CMS::BC5(int r_tot,int bar,bool Set)
+ {
+  if((!Set && bar==r_tot-1) || (Set && bar==0)) return(true);
+  return(false);
+ }
