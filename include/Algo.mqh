@@ -1826,3 +1826,27 @@ bool CMS::BC5(int r_tot,int bar,bool Set)
   if((!Set && bar==r_tot-1) || (Set && bar==0)) return(true);
   return(false);
  }
+
+double CMAvg::EMAS(uint b,uint p_calc,uint r_tot,double Length,double s,uint bar,bool set)
+  {
+   if(BarCheck1(b,bar,set)) return(EMPTY_VALUE);
+   double ema;
+   LengthCheck(Length);
+   if(bar==b)
+     {
+      m_Pr=2.0/(Length+1.0);
+      m_Moving=s;
+     }
+   m_Moving=s*m_Pr+m_Moving *(1-m_Pr);
+   ema=m_Moving;
+   if(BarCheck4(r_tot,bar,set))
+     {
+      m_MOVING=m_Moving;
+     }
+
+   if(BarCheck5(r_tot,bar,set))
+     {
+      m_Moving=m_MOVING;
+     }
+   return(ema);
+  }
