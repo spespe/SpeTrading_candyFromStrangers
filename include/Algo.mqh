@@ -1850,3 +1850,19 @@ double CMAvg::EMAS(uint b,uint p_calc,uint r_tot,double Length,double s,uint bar
      }
    return(ema);
   }
+
+  //Enum
+  enum Prices_ 
+{
+  PRICE_CLOSE_ = 1,     
+  PRICE_OPEN_,          
+  PRICE_HIGH_,          
+  PRICE_LOW_,           
+  PRICE_MEDIAN_,        
+  PRICE_TYPICAL_,       
+  PRICE_WEIGHTED_,      
+  PRICE_SIMPLE,         
+  PRICE_QUARTER_,       
+  PRICE_TRENDFOLLOW0_,  
+  PRICE_TRENDFOLLOW1_   
+};
