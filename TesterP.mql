@@ -1,0 +1,18 @@
+class P_Patt : public PPatt
+  {
+protected:
+   s_Extremum     s_HeadExtremum;         
+   s_Extremum     s_StartRShoulder;       
+
+public:
+                     CHS_Pattern();
+                    ~CHS_Pattern();
+
+   virtual bool      Create(CTrends *trends, double min_correction, double max_correction);
+   virtual bool      Search(datetime start_time);
+   virtual bool      CheckSignal(int &signal, double &sl, double &tp1, double &tp2);
+
+   s_Extremum        HeadExtremum(void)      const {  return s_HeadExtremum;     }
+   s_Extremum        StartRShoulder(void)    const {  return s_StartRShoulder;   }
+  };
+  
