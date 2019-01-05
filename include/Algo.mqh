@@ -1975,3 +1975,4 @@ bool bPriceSeries(stringsymbol,ENUM_TIMEFRAMEStimeframe,intrates_total,uintappli
 
    return(true);
   }
+  
