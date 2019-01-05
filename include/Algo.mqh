@@ -1866,3 +1866,112 @@ double CMAvg::EMAS(uint b,uint p_calc,uint r_tot,double Length,double s,uint bar
   PRICE_TRENDFOLLOW0_,  
   PRICE_TRENDFOLLOW1_   
 };
+
+//bPrc series
+bool bPriceSeries(stringsymbol,ENUM_TIMEFRAMEStimeframe,intrates_total,uintapplied_price,uintbar,boolset,double&Price_)
+  {
+   uint Bar;
+   double series[];
+   ArraySetAsSeries(series,true);
+   if(!set)
+      Bar=rates_total-1-bar;
+   else Bar=bar;
+
+   switch(applied_price)
+     {
+      case  1: if(CopyClose(symbol, timeframe, Bar, 1, series) < 0) return(false); Price_ = series[0]; break;
+      case  2: if(CopyOpen (symbol, timeframe, Bar, 1, series) < 0) return(false); Price_ = series[0]; break;
+      case  3: if(CopyHigh (symbol, timeframe, Bar, 1, series) < 0) return(false); Price_ = series[0]; break;
+      case  4: if(CopyLow  (symbol, timeframe, Bar, 1, series) < 0) return(false); Price_ = series[0]; break;
+ 
+      case  5: if(CopyHigh(symbol,timeframe,Bar,1,series)<0) return(false); Price_=series[0];
+      if(CopyLow(symbol,timeframe,Bar,1,series)<0) return(false); Price_+=series[0];
+      Price_/=2.0;
+      break;
+
+      case  6: if(CopyClose(symbol,timeframe,Bar,1,series)<0) return(false); Price_=series[0];
+      if(CopyHigh (symbol, timeframe, Bar, 1, series) < 0) return(false); Price_ += series[0];
+      if(CopyLow  (symbol, timeframe, Bar, 1, series) < 0) return(false); Price_ += series[0];
+      Price_/=3.0;
+      break;
+                                                                 
+      case  7: if(CopyClose(symbol,timeframe,Bar,1,series)<0) return(false); Price_=series[0]*2;
+      if(CopyHigh (symbol, timeframe, Bar, 1, series) < 0) return(false); Price_ += series[0];
+      if(CopyLow  (symbol, timeframe, Bar, 1, series) < 0) return(false); Price_ += series[0];
+      Price_/=4.0;
+      break;
+
+                                
+      case  8: if(CopyClose(symbol,timeframe,Bar,1,series)<0) return(false); Price_=series[0];
+      if(CopyOpen(symbol,timeframe,Bar,1,series)<0) return(false); Price_+=series[0];
+      Price_/=2.0;
+      break;
+
+      case  9: if(CopyClose(symbol,timeframe,Bar,1,series)<0) return(false); Price_=series[0];
+      if(CopyOpen (symbol, timeframe, Bar, 1, series) < 0) return(false); Price_ += series[0];
+      if(CopyHigh (symbol, timeframe, Bar, 1, series) < 0) return(false); Price_ += series[0];
+      if(CopyLow  (symbol, timeframe, Bar, 1, series) < 0) return(false); Price_ += series[0];
+      Price_/=4.0;
+      break;
+                              
+      case 10:
+        {
+         double Open_[1],Low_[1],High_[1],Close_[1];
+         
+         if(CopyClose(symbol, timeframe, Bar, 1, Close_) < 0) return(false);
+         if(CopyOpen (symbol, timeframe, Bar, 1, Open_ ) < 0) return(false);
+         if(CopyHigh (symbol, timeframe, Bar, 1, High_ ) < 0) return(false);
+         if(CopyLow  (symbol, timeframe, Bar, 1, Low_  ) < 0) return(false);
+         
+         if(Close_[0]>Open_[0])Price_=High_[0];
+         else
+           {
+            if(Close_[0]<Open_[0])
+               Price_=Low_[0];
+            else Price_=Close_[0];
+           }
+         break;
+        }
+               
+      case 11:
+        {
+         double Open_[1],Low_[1],High_[1],Close_[1];
+         
+         if(CopyClose(symbol, timeframe, Bar, 1, Close_) < 0) return(false);
+         if(CopyOpen (symbol, timeframe, Bar, 1, Open_ ) < 0) return(false);
+         if(CopyHigh (symbol, timeframe, Bar, 1, High_ ) < 0) return(false);
+         if(CopyLow  (symbol, timeframe, Bar, 1, Low_  ) < 0) return(false);
+         
+         if(Close_[0]>Open_[0])Price_=(High_[0]+Close_[0])/2.0;
+         else
+           {
+            if(Close_[0]<Open_[0])
+               Price_=(Low_[0]+Close_[0])/2.0;
+            else Price_=Close_[0];
+           }
+         break;
+        }
+              
+      case 12:
+        {
+         double Open_[1],Low_[1],High_[1],Close_[1];
+         
+         if(CopyClose(symbol, timeframe, Bar, 1, Close_) < 0) return(false);
+         if(CopyOpen (symbol, timeframe, Bar, 1, Open_ ) < 0) return(false);
+         if(CopyHigh (symbol, timeframe, Bar, 1, High_ ) < 0) return(false);
+         if(CopyLow  (symbol, timeframe, Bar, 1, Low_  ) < 0) return(false);
+         
+         double res=High_[0]+Low_[0]+Close_[0];
+
+         if(Close_[0]<Open_[0]) res=(res+Low_[0])/2;
+         if(Close_[0]>Open_[0]) res=(res+High_[0])/2;
+         if(Close_[0]==Open_[0]) res=(res+Close_[0])/2;
+         Price_=((res-Low_[0])+(res-High_[0]))/2;
+         break;
+        }
+      
+      default: if(CopyClose(symbol,timeframe,Bar,1,series)<0) return(false); Price_=series[0]; break;
+     }
+
+   return(true);
+  }
