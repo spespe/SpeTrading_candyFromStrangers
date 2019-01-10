@@ -1,0 +1,10 @@
+def movingAverage(values: List[Double], period: Int): List[Double] = {
+   val first = (values take period).sum / period
+   val subtract = values map (_ / period)
+   val add = subtract drop period
+   val addAndSubtract = add zip subtract map Function.tupled(_ - _)
+   val res = (addAndSubtract.foldLeft(first :: List.fill(period - 1)(0.0)) { 
+     (acc, add) => (add + acc.head) :: acc 
+   }).reverse
+   res
+ }
