@@ -36,6 +36,7 @@ input int PriceShift=0;
 double IndBuffer[],ColorBuffer[],val[];
 double dPriceShift,Sqrt100,K100;
 int min_rates_total;
+
 void OnInit()
   {
    min_rates_total=2;
@@ -59,12 +60,13 @@ void OnInit()
    IndicatorSetInteger(INDICATOR_DIGITS,_Digits+1);
    SetIndexBuffer(0,val,INDICATOR_DATA);
   }
-int OnCalculate(const int rates_total,    // number of bars in history at the current tick
-                const int prev_calculated,// number of bars calculated at previous call
+
+int OnCalculate(const int rates_total,    
+                const int prev_calculated,
                 const datetime &time[],
                 const double &open[],
-                const double& high[],     // price array of maximums of price for the indicator calculation
-                const double& low[],      // price array of minimums of price for the indicator calculation
+                const double& high[],     
+                const double& low[],      
                 const double &close[],
                 const long &tick_volume[],
                 const long &volume[],
@@ -125,30 +127,29 @@ double PriceSeries(uint applied_price,uint   bar,const double &Open[],const doub
       case  PRICE_MEDIAN: return((High[bar]+Low[bar])/2.0);
       case  PRICE_TYPICAL: return((Close[bar]+High[bar]+Low[bar])/3.0);
       case  PRICE_WEIGHTED: return((2*Close[bar]+High[bar]+Low[bar])/4.0);
-
       case  8: return((Open[bar] + Close[bar])/2.0);
       case  9: return((Open[bar] + Close[bar] + High[bar] + Low[bar])/4.0);
       case 10:
-        {
-         if(Close[bar]>Open[bar])return(High[bar]);
-         else
-           {
-            if(Close[bar]<Open[bar])
-               return(Low[bar]);
-            else return(Close[bar]);
-           }
-        }
+			{
+			 if(Close[bar]>Open[bar])return(High[bar]);
+			 else
+			   {
+				if(Close[bar]<Open[bar])
+				   return(Low[bar]);
+				else return(Close[bar]);
+			   }
+			}
       case 11:
-        {
-         if(Close[bar]>Open[bar])return((High[bar]+Close[bar])/2.0);
-         else
-           {
-            if(Close[bar]<Open[bar])
-               return((Low[bar]+Close[bar])/2.0);
-            else return(Close[bar]);
-           }
-         break;
-        }
+			{
+			 if(Close[bar]>Open[bar])return((High[bar]+Close[bar])/2.0);
+			 else
+			   {
+				if(Close[bar]<Open[bar])
+				   return((Low[bar]+Close[bar])/2.0);
+				else return(Close[bar]);
+			   }
+			 break;
+			}
       default: return(Close[bar]);
      }
   }
