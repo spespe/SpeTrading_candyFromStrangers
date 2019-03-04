@@ -1,0 +1,102 @@
+#property indicator_separate_window
+#property indicator_buffers 9
+#property indicator_plots   8
+#property indicator_label8  "RRSI"
+#property indicator_type8   DRAW_COLOR_LINE
+
+
+enum TF
+{
+   tf_cu  = PERIOD_CURRENT, 
+   tf_m1  = PERIOD_M1,      
+   tf_m2  = PERIOD_M2,      
+   tf_m3  = PERIOD_M3,      
+   tf_m4  = PERIOD_M4,      
+   tf_m5  = PERIOD_M5,      
+   tf_m6  = PERIOD_M6,      
+   tf_m10 = PERIOD_M10,     
+   tf_m12 = PERIOD_M12,     
+   tf_m15 = PERIOD_M15,     
+   tf_m20 = PERIOD_M20,     
+   tf_m30 = PERIOD_M30,     
+   tf_h1  = PERIOD_H1,      
+   tf_h2  = PERIOD_H2,      
+   tf_h3  = PERIOD_H3,      
+   tf_h4  = PERIOD_H4,      
+   tf_h6  = PERIOD_H6,      
+   tf_h8  = PERIOD_H8,      
+   tf_h12 = PERIOD_H12,     
+   tf_d1  = PERIOD_D1,      
+   tf_w1  = PERIOD_W1,      
+   tf_mn  = PERIOD_MN1,     
+   tf_cp1 = -1,             
+   tf_cp2 = -2,             
+   tf_cp3 = -3              
+};
+input enTimeFrames       inpTimeFrame = tf_h4;             
+input int                inpPeriod    = 14;                
+input int                inpSmooth    = 50;                
+input ENUM_APPLIED_PRICE inpPrice     = PRICE_CLOSE;       
+enum enCalcMode
+{
+   calc_fisher  = 0, 
+   calc_regular = 1  
+};
+input enCalcMode         inpCalcMode  = calc_fisher;       
+input color              inpColorSup  = clrOrangeRed;      
+input color              inpColorRes  = clrMediumSeaGreen; 
+input color              inpColorPiv  = clrGray;           
+enum enDisplayType
+{
+   type_1=0, 
+   type_2=1, 
+   type_3=2, 
+   type_4=3, 
+};
+input enDisplayType inpDisplayType = type_2; // Display type
+
+
+
+double val[],valc[],sup1[],sup2[],sup3[],res1[],res2[],res3[],piv[];
+ENUM_TIMEFRAMES _pivotsTimeFrame;
+
+//------------------------------------------------------------------ 
+//  Custom indicator initialization function
+//------------------------------------------------------------------
+
+int OnInit()
+{
+
+         SetIndexBuffer(0,sup3,INDICATOR_DATA);
+         SetIndexBuffer(1,sup2,INDICATOR_DATA);
+         SetIndexBuffer(2,sup1,INDICATOR_DATA);
+         SetIndexBuffer(3,piv ,INDICATOR_DATA);
+         SetIndexBuffer(4,res1,INDICATOR_DATA);
+         SetIndexBuffer(5,res2,INDICATOR_DATA);
+         SetIndexBuffer(6,res3,INDICATOR_DATA);
+         SetIndexBuffer(7,val ,INDICATOR_DATA);
+         SetIndexBuffer(8,valc,INDICATOR_COLOR_INDEX);
+            for (int i=0; i<7; i++)
+            {
+               switch (i)
+               {
+                  case 0 : 
+                  case 1 : 
+                  case 2 : PlotIndexSetInteger(i,PLOT_LINE_COLOR,inpColorSup); break;
+                  case 3 : PlotIndexSetInteger(i,PLOT_LINE_COLOR,inpColorPiv); break;
+                  case 4 : 
+                  case 5 : 
+                  case 6 : PlotIndexSetInteger(i,PLOT_LINE_COLOR,inpColorRes); break;
+               }
+               PlotIndexSetInteger(i,PLOT_DRAW_TYPE,DRAW_LINE);                
+               PlotIndexSetInteger(i,PLOT_LINE_STYLE,STYLE_DOT);
+               PlotIndexSetInteger(i,PLOT_SHOW_DATA,false);
+            }
+            
+            iRRSI.init(inpPeriod,inpSmooth,inpCalcMode);
+            _pivotsTimeFrame = MathMax(_Period,timeFrameGet(inpTimeFrame));
+ 
+ 
+   IndicatorSetString(INDICATOR_SHORTNAME,timeFrameToString(_pivotsTimeFrame)+" RRSI ("+(string)inpPeriod+","+(string)inpSmooth+")");
+   return(INIT_SUCCEEDED);
+}
