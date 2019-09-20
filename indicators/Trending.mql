@@ -10,8 +10,8 @@ input double  inpMultiplier   = 3;
 input int     inpChannelShift = 1;
 enum enDisplayMode
 {
-   disp_bars,   // Display bars
-   disp_candles // Display candles
+   disp_bars,   
+   disp_candles 
 };
 input enDisplayMode inpDisplayMode = disp_bars; 
 
@@ -41,3 +41,21 @@ int OnInit()
    return (INIT_SUCCEEDED);
 }
 void OnDeinit(const int deinitial) {}
+
+
+//------------------------------------------------------------------
+// OnCalculate function
+//------------------------------------------------------------------
+
+int OnCalculate(){
+const intrates_total,
+const intprev_calculated,
+const datetime&time[],
+const double&open[],
+const double&high[],
+const double&low[],
+const double&close[],
+const long&tick_volume[],
+const long&volume[],
+const int&spread[]
+}
