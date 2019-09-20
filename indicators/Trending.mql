@@ -1,0 +1,43 @@
+#property indicator_chart_window
+#property indicator_buffers 7
+#property indicator_plots   2
+#property indicator_type1   DRAW_COLOR_BARS
+#property indicator_type2   DRAW_COLOR_LINE
+#property indicator_style2  STYLE_DOT
+
+input int     inpPeriod       = 21; 
+input double  inpMultiplier   = 3; 
+input int     inpChannelShift = 1;
+enum enDisplayMode
+{
+   disp_bars,   // Display bars
+   disp_candles // Display candles
+};
+input enDisplayMode inpDisplayMode = disp_bars; 
+
+double baro[],barh[],barl[],barc[],barcl[],line[],linecl[];
+int _minMaxPeriod;
+
+//------------------------------------------------------------------
+// Inizialization function
+//------------------------------------------------------------------
+
+int OnInit()
+{
+   SetIndexBuffer(0,baro  ,INDICATOR_DATA);
+   SetIndexBuffer(1,barh  ,INDICATOR_DATA);
+   SetIndexBuffer(2,barl  ,INDICATOR_DATA);
+   SetIndexBuffer(3,barc  ,INDICATOR_DATA);
+   SetIndexBuffer(4,barcl ,INDICATOR_COLOR_INDEX);
+   SetIndexBuffer(5,line  ,INDICATOR_DATA);
+   SetIndexBuffer(6,linecl,INDICATOR_COLOR_INDEX);
+      PlotIndexSetInteger(0,PLOT_DRAW_TYPE, inpDisplayMode==disp_bars ? DRAW_COLOR_BARS : DRAW_COLOR_CANDLES);
+  
+      
+      _minMaxPeriod = MathMax(inpPeriod-1,0);
+      iLwma.init(inpPeriod);
+   
+   IndicatorSetString(INDICATOR_SHORTNAME,StringFormat("Trading the trend (%i,%.1f shift %i)",inpPeriod,inpMultiplier,inpChannelShift));
+   return (INIT_SUCCEEDED);
+}
+void OnDeinit(const int deinitial) {}
