@@ -47,7 +47,7 @@ void OnDeinit(const int deinitial) {}
 // OnCalculate function
 //------------------------------------------------------------------
 
-int OnCalculate(){
+int OnCalculate(
 const intrates_total,
 const intprev_calculated,
 const datetime&time[],
@@ -57,5 +57,40 @@ const double&low[],
 const double&close[],
 const long&tick_volume[],
 const long&volume[],
-const int&spread[]
+const int&spread[])
+{
+   int limit=prev_calculated-1; if (limit<0) limit = 0;
+       static datetime prevTime = -1;
+       static double   prevMax, prevMin;
+
+   int i=limit; for(; i<rates_total && !_StopFlag; i++)
+   {
+      if (prevTime!=time[i])
+      {
+         prevTime = time[i];
+         int _start = i-inpPeriod-inpChannelShift+1; 
+         if (_start<0) _start=0;
+               prevMax  = close[ArrayMaximum(close,_start,_minMaxPeriod)];
+               prevMin  = close[ArrayMinimum(close,_start,_minMaxPeriod)];
+      }        
+      
+          
+         double h = (close[i]>prevMax) ? close[i] : prevMax;
+         double l = (close[i]<prevMin) ? close[i] : prevMin;
+         double rh = (i>0) ? (high[i]>close[i-1] ? high[i] : close[i-1]) : high[i];
+         double rl = (i>0) ? (low[i] <close[i-1] ? low[i]  : close[i-1]) : low[i];
+         double tr      = iLwma.calculate(rh-rl,i,rates_total);
+         double hLim = h-tr*inpMultiplier;
+         double lLim = l+tr*inpMultiplier;
+
+               
+      line[i]   = ;
+      linecl[i] = (close[i]>line[i]) ? 1 : (close[i]<line[i]) ? 2 : (i>0) ? linecl[i-1] : 0;
+      barh[i]   = high[i];
+      barl[i]   = low[i];
+      barc[i]   = close[i];
+      baro[i]   = open[i];
+      barcl[i]  = linecl[i];
+   }
+   return (i);
 }
