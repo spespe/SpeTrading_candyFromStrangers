@@ -84,7 +84,7 @@ const int&spread[])
          double lLim = l+tr*inpMultiplier;
 
                
-      line[i]   = ;
+      line[i]   = (close[i]>lLim && close[i]>hLim) ? hLim : (close[i]<lLim && close[i]<hLim) ? lLim : (i>0) ? line[i-1] : close[i];
       linecl[i] = (close[i]>line[i]) ? 1 : (close[i]<line[i]) ? 2 : (i>0) ? linecl[i-1] : 0;
       barh[i]   = high[i];
       barl[i]   = low[i];
