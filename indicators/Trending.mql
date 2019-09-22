@@ -111,6 +111,9 @@ private :
 public :
   C_lwma(): m_period(1), m_arraySize(-1), m_weight(1) { }
  ~C_lwma()                                            { }
+
+void  init(int period) 
+	  { m_period = (period>1) ? period : 1; }
+
+double calculate () {} // to be defined
 }
-
-
