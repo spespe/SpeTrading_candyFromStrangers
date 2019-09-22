@@ -94,3 +94,23 @@ const int&spread[])
    }
    return (i);
 }
+
+class C_lwma
+{
+private :
+  struct sLwmaArrS
+    {
+      double value;
+      double wsumm;
+      double vsumm;
+    };
+  sLwmaArrayStruct m_array[];
+  int              m_arraySize;
+  int              m_period;
+  double           m_weight;
+public :
+  C_lwma(): m_period(1), m_arraySize(-1), m_weight(1) { }
+ ~C_lwma()                                            { }
+}
+
+
