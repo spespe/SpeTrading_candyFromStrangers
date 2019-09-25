@@ -115,5 +115,8 @@ public :
 void  init(int period) 
 	  { m_period = (period>1) ? period : 1; }
 
-double calculate () {} // to be defined
+double calculate(double val, int i, int bars)
+{
+	if (m_arraySize<bars) m_arraySize=ArrayResize(m_array,bars+500,2000);
+	    
 }
